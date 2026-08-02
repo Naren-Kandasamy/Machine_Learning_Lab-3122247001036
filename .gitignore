@@ -1,5 +1,16 @@
 # Python testing and fixing scripts
-*.py
+*output.txt
+custom_*_out.txt
+run_custom_*.py
+ex4_phase*.py
+fix_*.py
+patch_*.py
+phase*_modify.py
+extract.py
+ML_Lab_ex2*.py
+run_ex2_only.py
+update_notebook.py
+__pycache__/
 
 # Markdown documents
 *.md

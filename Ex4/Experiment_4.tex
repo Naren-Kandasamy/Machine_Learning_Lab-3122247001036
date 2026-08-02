@@ -1,0 +1,185 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ICS1512}
+\rhead{Machine Learning Algorithms Laboratory}
+\cfoot{\thepage}
+
+\lstset{
+language=Python,
+basicstyle=\ttfamily\small,
+numbers=left,
+frame=single,
+breaklines=true,
+showstringspaces=false
+}
+
+\begin{document}
+
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+Experiment No. & 4 \\ \hline
+Experiment Title & Email Spam Classification using Logistic Regression and Support Vector Machines (SVM)
+\footnote{\textbf{GitHub Repository: }\url{https://github.com/Naren-Kandasamy/Machine_Learning_Lab-3122247001036}}\\ \hline
+Student Name & Naren Kandasamy \\ \hline
+Register Number & 3122247001036 \\ \hline
+Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
+Submission Date & \\ \hline
+\end{tabular}
+
+\section{Objective}
+To implement Logistic Regression and Support Vector Machines (SVM) for binary classification on the Kaggle Spambase dataset. The experiment compares SVM performance across different kernels (Linear, Polynomial, RBF, Sigmoid) and performs hyperparameter tuning using RandomizedSearchCV to optimize both models.
+
+\section{Problem Statement}
+The objective is to accurately classify an email as either "Spam" ($1$) or "Ham" ($0$). The input is a robust text-frequency dataset of 57 continuous numerical features representing word and character frequencies. The goal is to maximize classification metrics (Accuracy, Precision, Recall, F1-Score) while balancing training times by applying margin-based and probabilistic linear classifiers.
+
+\section{Dataset Description}
+\begin{longtable}{|p{6cm}|p{8cm}|}
+\hline
+Dataset Name & Kaggle Spambase Dataset (\texttt{spambase\_csv.csv}) \\ \hline
+Dataset Source & Kaggle / UCI Machine Learning Repository \\ \hline
+Number of Samples & 4,601 \\ \hline
+Number of Features & 57 (Word/Character Frequencies and lengths) \\ \hline
+Number of Classes & 2 (Spam, Ham) \\ \hline
+Missing Values & 0 \\ \hline
+Train-Test Split & Train: 3,220 | Validation: 690 | Test: 691 \\ \hline
+\end{longtable}
+
+\section{Exploratory Data Analysis}
+EDA confirmed that there is a slight class imbalance (more ham than spam emails), which necessitates the evaluation of F1-Score in addition to strict Accuracy. Features primarily represent float frequencies, requiring uniform scaling so that margin-based algorithms like SVM treat spatial distances fairly.
+
+\section{Data Preprocessing}
+\begin{itemize}
+\item \textbf{Feature Scaling:} Standardized all features using \texttt{StandardScaler} to achieve zero mean and unit variance. This is extremely critical for SVMs, as they are highly sensitive to unscaled distances, and beneficial for Logistic Regression convergence.
+\item \textbf{Sparsity Management:} Because this is NLP-derived tabular data, traditional missing value imputation was omitted as zero implies the true absence of a word.
+\item \textbf{Train-test split:} The dataset was split into Training, Validation, and Testing sets using a stratified approach.
+\end{itemize}
+
+\section{Machine Learning Algorithm}
+
+\textbf{1. Logistic Regression:}
+\begin{itemize}
+\item \textbf{Working principle:} Models the probability of the default class using a logistic (sigmoid) function.
+\item \textbf{Mathematical formulation:} $P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X)}}$
+\item \textbf{Advantages:} Highly interpretable, provides probability outputs, scales well to large datasets.
+\end{itemize}
+
+\textbf{2. Support Vector Machine (SVM):}
+\begin{itemize}
+\item \textbf{Working principle:} Finds the optimal hyperplane that maximizes the margin between the two classes.
+\item \textbf{Mathematical formulation:} $\min \frac{1}{2} ||w||^2 + C \sum \xi_i$ subject to $y_i(w \cdot x_i + b) \ge 1 - \xi_i$.
+\item \textbf{Kernels:} Uses the kernel trick to project data into higher dimensions if it is not linearly separable.
+\end{itemize}
+
+\section{Experimental Setup}
+\begin{tabular}{ll}
+\toprule
+Python Version & 3.10+ \\
+Scikit-Learn Version & 1.0+ \\
+IDE & Jupyter Notebook / VS Code \\
+Operating System & Linux \\
+Hardware & Standard CPU Workspace \\
+\bottomrule
+\end{tabular}
+
+\section{Hyperparameter Selection}
+
+RandomizedSearchCV was employed to find the best configuration for the models over the high-dimensional space.
+
+\begin{tabular}{lp{9cm}}
+\toprule
+Model & Optimal Parameters \\
+\midrule
+Logistic Regression & \texttt{solver} = 'liblinear', \texttt{penalty} = 'l1', \texttt{C} = 100 \\
+Support Vector Machine & \texttt{kernel} = 'linear', \texttt{gamma} = 'scale', \texttt{C} = 10 \\
+\bottomrule
+\end{tabular}
+
+\section{Results}
+
+\textbf{1. SVM Kernel-wise Performance (Before Tuning):}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Kernel & Accuracy & F1-Score & Training Time (s) \\
+\midrule
+Linear & 0.9276 & 0.9053 & 0.3215 \\
+Poly & 0.8437 & 0.7632 & 0.1943 \\
+RBF & 0.9204 & 0.8952 & 0.1456 \\
+Sigmoid & 0.8726 & 0.8352 & 0.1701 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{2. Test Set Metrics (Best Tuned Models):}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Model & Accuracy & Precision & Recall & F1-Score \\
+\midrule
+Logistic Regression & 0.9247 & 0.9405 & 0.8713 & 0.9046 \\
+SVM (Linear Kernel) & 0.9262 & 0.9320 & 0.8800 & 0.9053 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{3. 5-Fold Cross Validation:}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Model & Average CV Accuracy & Average CV F1-Score \\
+\midrule
+Logistic Regression & 0.9268 ($\pm 0.0024$) & 0.9055 ($\pm 0.0037$) \\
+SVM (Linear Kernel) & 0.9283 ($\pm 0.0045$) & 0.9079 ($\pm 0.0062$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Result Visualization}
+
+During the execution, the following graphical assessments were made:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{confusion_matrix.png}
+\caption{Confusion Matrix comparison between Logistic Regression and SVM (Linear)}
+\end{figure}
+
+\textbf{Inference:} The confusion matrices demonstrate that both models perform exceptionally well, but Logistic Regression produces slightly fewer false positives, while SVM minimizes false negatives.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{roc_curve.png}
+\caption{Receiver Operating Characteristic (ROC) Curve}
+\end{figure}
+
+\textbf{Inference:} The ROC curve indicates a high area under the curve (AUC) for both models. SVM barely edges out Logistic Regression, proving it is highly capable of distinguishing between Ham and Spam effectively across different thresholds.
+
+\section{Discussion}
+The experiment showed that for the Spambase dataset, the Linear Kernel outperformed non-linear kernels (like Poly and Sigmoid) in accuracy (0.9276 vs 0.8437). This suggests that text-frequency features are generally linearly separable in high-dimensional space. While both Logistic Regression and SVM achieved very similar accuracies post-tuning ($~92.5\%$), Logistic Regression trained significantly faster ($0.0197s$ vs $0.3215s$). The cross-validation confirmed these results were stable and robust against overfitting.
+
+\section{Conclusion}
+The experiment successfully implemented Logistic Regression and SVM classifiers. By comparing various SVM kernels, the superiority of the Linear Kernel for this specific NLP feature-set was observed. Both models proved highly competent for spam classification, with Logistic Regression providing the advantage of speed and probability outputs, while SVM provided slightly better strict margin generalization (higher cross-validation F1-score).
+
+\section{References}
+\begin{enumerate}
+    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, 2011.
+    \item Cortes, C., Vapnik, V. "Support-vector networks." \textit{Machine Learning}, vol. 20, 1995.
+\end{enumerate}
+
+\end{document}

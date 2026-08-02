@@ -1,0 +1,180 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ICS1512}
+\rhead{Machine Learning Algorithms Laboratory}
+\cfoot{\thepage}
+
+\lstset{
+language=Python,
+basicstyle=\ttfamily\small,
+numbers=left,
+frame=single,
+breaklines=true,
+showstringspaces=false
+}
+
+\begin{document}
+
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+Experiment No. & 2 \\ \hline
+Experiment Title & Email Spam/Ham Classification Comparing Na\"{i}ve Bayes Variations and K-Nearest Neighbors
+\footnote{\textbf{GitHub Repository: }\url{https://github.com/Naren-Kandasamy/Machine_Learning_Lab-3122247001036}}\\ \hline
+Student Name & Naren Kandasamy \\ \hline
+Register Number & 3122247001036 \\ \hline
+Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
+Submission Date & \\ \hline
+\end{tabular}
+
+\section{Objective}
+To implement and compare the performance of multiple Na\"{i}ve Bayes variations (Gaussian, Multinomial, Bernoulli) against K-Nearest Neighbors (KNN) on the Kaggle Spambase dataset. The experiment evaluates the effect of varying hyperparameter $k$, compares KDTree vs BallTree structures, optimizes KNN using GridSearchCV and RandomizedSearchCV, and validates using 5-Fold Cross Validation.
+
+\section{Problem Statement}
+The problem is to accurately classify emails as either "Spam" or "Ham" based on the occurrence and frequency of specific words and characters. The input is a text-based dataset pre-processed into 57 continuous numerical features. The output is a binary prediction ($1$ for Spam, $0$ for Ham).
+
+\section{Dataset Description}
+\begin{longtable}{|p{6cm}|p{8cm}|}
+\hline
+Dataset Name & Kaggle Spambase Dataset (\texttt{spambase\_csv.csv}) \\ \hline
+Dataset Source & Kaggle / UCI Machine Learning Repository \\ \hline
+Number of Samples & 4,601 \\ \hline
+Number of Features & 57 (Word/Character Frequencies and lengths) \\ \hline
+Number of Classes & 2 (Spam, Ham) \\ \hline
+Missing Values & 0 \\ \hline
+Train-Test Split & Train: 3,220 | Validation: 690 | Test: 691 \\ \hline
+\end{longtable}
+
+\section{Exploratory Data Analysis}
+During the automated pipeline exploration, basic EDA was conducted. This included determining the total vocabulary size (56 predictive features plus 1 target). A class distribution plot was generated to check for class imbalance between Spam and Ham.
+
+\section{Data Preprocessing}
+The data preprocessing steps for this dataset included:
+\begin{itemize}
+\item \textbf{Handling Sparsity:} Standard statistical imputation and zero-mean scaling were skipped for the Na\"{i}ve Bayes models to preserve the exact frequency structures of the features.
+\item \textbf{Scaling for KNN:} Since distance-based algorithms are highly sensitive to unscaled data, a \texttt{MinMaxScaler} was specifically applied to the training and testing sets before fitting the KNN model.
+\item \textbf{Train-test split:} The dataset was split into Training, Validation, and Testing sets using a stratified approach to maintain class ratios.
+\end{itemize}
+
+\section{Machine Learning Algorithm}
+Two primary types of algorithms were evaluated:
+
+\textbf{1. Na\"{i}ve Bayes (Gaussian, Multinomial, Bernoulli):}
+\begin{itemize}
+\item \textbf{Working principle:} A probabilistic classifier based on Bayes' theorem, applying a strict "na\"{i}ve" independence assumption between the features.
+\item \textbf{Mathematical formulation:} $P(c|x) = \frac{P(x|c)P(c)}{P(x)}$ where $c$ is the class and $x$ is the feature vector.
+\end{itemize}
+
+\textbf{2. K-Nearest Neighbors (KNN):}
+\begin{itemize}
+\item \textbf{Working principle:} An instance-based algorithm that assigns a class based on the majority vote of the $k$ closest training examples.
+\item \textbf{Mathematical formulation:} Euclidean distance: $d(p, q) = \sqrt{\sum_{i=1}^{n} (q_i - p_i)^2}$.
+\item \textbf{Tree Structures:} KDTree and BallTree structures were used to speed up distance calculations and spatial queries over brute force.
+\end{itemize}
+
+\section{Experimental Setup}
+\begin{tabular}{ll}
+\toprule
+Python Version & 3.10+ \\
+Scikit-Learn Version & 1.0+ \\
+IDE & Jupyter Notebook / VS Code \\
+Operating System & Linux \\
+Hardware & Standard CPU Workspace \\
+\bottomrule
+\end{tabular}
+
+\section{Hyperparameter Selection}
+
+\textbf{KNN Comparison (Varying $k$):}
+By iterating over $k \in \{1, 3, 5, 7, 9, 11\}$, the highest accuracy initially observed on the un-optimized default weights was at $k=5$ (Accuracy: 0.9030), before testing distance weights.
+
+\begin{tabular}{ll}
+\toprule
+Optimization Strategy & Result \\
+\midrule
+GridSearchCV Best Params & \texttt{\{'n\_neighbors': 7, 'weights': 'distance'\}} (Found in 0.51s) \\
+RandomizedSearchCV Best Params & \texttt{\{'n\_neighbors': 5, 'weights': 'distance'\}} (Found in 0.29s) \\
+\bottomrule
+\end{tabular}
+
+\section{Results}
+
+\textbf{1. Model Performance Comparison:}
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+Model & Accuracy & Precision & Recall & F1-score & ROC-AUC \\
+\midrule
+Multinomial NB & 0.8958 & 0.9464 & 0.7794 & 0.8548 & 0.9558 \\
+Gaussian NB & 0.8220 & 0.7018 & 0.9522 & 0.8081 & 0.9166 \\
+Bernoulli NB & 0.6483 & 0.8717 & 0.1250 & 0.2186 & 0.6097 \\
+Optimized KNN & 0.9088 & 0.9023 & 0.8654 & 0.8835 & 0.9412 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{2. 5-Fold Cross Validation (Best NB vs Best KNN):}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Fold & Na\"{i}ve Bayes & Best KNN \\
+\midrule
+1 & 0.8825 & 0.9055 \\
+2 & 0.8964 & 0.9130 \\
+3 & 0.8849 & 0.9015 \\
+4 & 0.8900 & 0.9105 \\
+5 & 0.9015 & 0.9118 \\
+\midrule
+\textbf{Average} & \textbf{0.8911} & \textbf{0.9085} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{3. Tree Structure Timing Comparison:}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Algorithm & Train Time (s) & Predict Time (s) \\
+\midrule
+KDTree & 0.0107 & 0.1106 \\
+BallTree & 0.0071 & 0.0942 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Result Visualization}
+During execution, various evaluation plots were generated:
+\begin{itemize}
+\item \textbf{Accuracy vs k:} Displaying the curve of classification accuracy as $k$ varies from 1 to 11.
+\item \textbf{ROC Curves \& PR Curves:} Comparing the area under the curve for Gaussian, Multinomial, Bernoulli NB, and the Optimized KNN.
+\item \textbf{Confusion Matrices:} 2x2 grids evaluating false positives and false negatives for all models.
+\item \textbf{GridSearchCV Heatmap:} A heatmap visualizing the Mean F1-Score across different combinations of $k$ and weights.
+\end{itemize}
+
+\section{Discussion}
+Multinomial Na\"{i}ve Bayes proved highly effective among the probabilistic models, achieving 89.58\% test accuracy and a high ROC-AUC of 0.9558. However, after extensive hyperparameter tuning using GridSearchCV (finding $k=7$, weights='distance'), the K-Nearest Neighbors classifier outperformed the Na\"{i}ve Bayes variations, achieving a stable average 5-Fold CV Accuracy of 90.85\%. Furthermore, utilizing the BallTree algorithm proved slightly faster than KDTree for spatial predictions on the 57-dimensional dataset.
+
+\section{Conclusion}
+In conclusion, the experiment demonstrated that while probabilistic models like Multinomial Na\"{i}ve Bayes are extremely fast and perform well on text data, distance-based algorithms like K-Nearest Neighbors can achieve superior classification performance (90.85\% Accuracy) after careful hyperparameter tuning and spatial tree optimization.
+
+\section{References}
+\begin{enumerate}
+    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, 2011.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,170 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ICS1512}
+\rhead{Machine Learning Algorithms Laboratory}
+\cfoot{\thepage}
+
+\lstset{
+language=Python,
+basicstyle=\ttfamily\small,
+numbers=left,
+frame=single,
+breaklines=true,
+showstringspaces=false
+}
+
+\begin{document}
+
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+Experiment No. & 3 \\ \hline
+Experiment Title & Loan Amount Prediction using Regularized Linear Regression
+\footnote{\textbf{GitHub Repository: }\url{https://github.com/Naren-Kandasamy/Machine_Learning_Lab-3122247001036}}\\ \hline
+Student Name & Naren Kandasamy \\ \hline
+Register Number & 3122247001036 \\ \hline
+Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
+Submission Date & \\ \hline
+\end{tabular}
+
+\section{Objective}
+To implement linear regression using Regularization techniques including L1 (Lasso), L2 (Ridge), and L1+L2 (ElasticNet). The experiment also aims to perform hyperparameter tuning to find appropriate alpha penalization values using Cross-Validation, plot the regularized coefficients versus alpha, and plot learning curves for the regularized models.
+
+\section{Problem Statement}
+The problem requires building a robust regression model to predict the continuous \texttt{loan\_amount} variable based on applicant features such as income, assets, and dependents. The input is tabular demographic and financial data, and the output is a continuous predicted loan amount, scaled appropriately. The objective is to apply regularization to prevent overfitting and improve generalization.
+
+\section{Dataset Description}
+\begin{longtable}{|p{6cm}|p{8cm}|}
+\hline
+Dataset Name & Loan Approval Dataset (\texttt{loan\_approval\_dataset.csv}) \\ \hline
+Dataset Source & Kaggle \\ \hline
+Number of Samples & 4,269 \\ \hline
+Number of Features & 12 (Income, Assets, Dependents, Education, etc.) \\ \hline
+Number of Classes & N/A (Continuous Target: \texttt{loan\_amount}) \\ \hline
+Missing Values & Imputed (Categorical with mode, Numerical with median) \\ \hline
+Train-Test Split & Train: 2,921 | Validation: 626 | Test: 626 \\ \hline
+\end{longtable}
+
+\section{Exploratory Data Analysis}
+Exploratory analysis was performed to understand feature distributions. Visualizations and statistical summaries highlighted that some applicant features (like income and asset values) had significant skew. A total of 96 extreme outlier rows were identified and dropped before scaling the dataset.
+
+\section{Data Preprocessing}
+\begin{itemize}
+\item \textbf{Missing Value Handling:} Numerical columns were imputed with their median. Categorical columns (like Education, Self-Employed, Loan\_Status) were imputed using the mode.
+\item \textbf{Encoding:} Categorical string columns were encoded into numeric category codes for matrix compatibility.
+\item \textbf{Feature Scaling:} All numerical continuous columns, including \texttt{income\_annum}, \texttt{cibil\_score}, and asset values were standardized (zero mean, unit variance) to ensure regularization penalties were applied uniformly across features.
+\item \textbf{Outlier Removal:} Extreme outliers were removed to prevent distortion in the Ordinary Least Squares (OLS) distance calculations.
+\end{itemize}
+
+\section{Machine Learning Algorithm}
+Four variations of Linear Regression were tested:
+\begin{itemize}
+\item \textbf{Standard Linear Regression:} Fits a linear model minimizing the residual sum of squares between the observed targets and predictions. No regularization penalty.
+\item \textbf{Ridge (L2):} Adds an L2 penalty equal to the square of the magnitude of coefficients. Formula: $Cost = RSS + \alpha \sum \beta_i^2$.
+\item \textbf{Lasso (L1):} Adds an L1 penalty equal to the absolute value of the magnitude of coefficients. Can yield sparse models where some coefficients become exactly zero. Formula: $Cost = RSS + \alpha \sum |\beta_i|$.
+\item \textbf{ElasticNet (L1+L2):} A convex combination of Ridge and Lasso penalties, controlled by an \texttt{l1\_ratio} parameter.
+\end{itemize}
+
+\section{Experimental Setup}
+\begin{tabular}{ll}
+\toprule
+Python Version & 3.10+ \\
+Scikit-Learn Version & 1.0+ \\
+IDE & Jupyter Notebook / VS Code \\
+Operating System & Linux \\
+Hardware & Standard CPU Workspace \\
+\bottomrule
+\end{tabular}
+
+\section{Hyperparameter Selection}
+
+To optimize the regularization models, GridSearchCV was utilized to test various \texttt{alpha} penalty weights across cross-validated folds.
+
+\begin{tabular}{ll}
+\toprule
+Model & Optimal Parameters \\
+\midrule
+Ridge (L2) & \texttt{alpha} = 0.1 \\
+Lasso (L1) & \texttt{alpha} = 0.01 \\
+ElasticNet & \texttt{alpha} = 0.01, \texttt{l1\_ratio} = 0.8 \\
+\bottomrule
+\end{tabular}
+
+\section{Results}
+
+\textbf{1. Test Set Metrics:}
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Model & MAE & RMSE & $R^2$ Score\\
+\midrule
+Standard Linear Regression & 0.2789 & 0.3696 & 0.8736 \\
+Ridge Regression & 0.2789 & 0.3696 & 0.8736 \\
+Lasso Regression & 0.2801 & 0.3705 & 0.8724 \\
+ElasticNet Regression & 0.2798 & 0.3701 & 0.8727 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{2. 5-Fold Cross Validation ($R^2$ Mean):}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Model & Average CV $R^2$ Score \\
+\midrule
+Standard Linear Regression & 0.8578 ($\pm 0.0127$) \\
+Ridge Regression & 0.8578 ($\pm 0.0127$) \\
+Lasso Regression & 0.8580 ($\pm 0.0131$) \\
+ElasticNet Regression & 0.8578 ($\pm 0.0130$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Result Visualization}
+
+During the execution, the following graphs were generated to analyze the algorithms:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{coef_vs_alpha.png}
+\caption{Regularized Coefficients vs Alpha for Ridge and Lasso}
+\end{figure}
+
+\textbf{Inference:} Plotted on a logarithmic scale, these plots visually demonstrate how Lasso aggressively pushes coefficient values to exactly zero as alpha increases, performing intrinsic feature selection. In contrast, Ridge shrinks them asymptotically towards zero without removing them entirely.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{learning_curves.png}
+\caption{Learning Curves for Ridge, Lasso, and ElasticNet}
+\end{figure}
+
+\textbf{Inference:} The learning curves showcase the training and cross-validation $R^2$ scores as a function of the number of training examples. The tight convergence of the curves across all models indicates that they do not suffer from high variance (overfitting) and stabilize quickly with increasing data.
+
+\section{Discussion}
+The baseline Linear Regression model performed strongly with an $R^2$ of 0.8736. Applying Ridge and ElasticNet regularization yielded nearly identical performance, indicating that the baseline model was not severely overfitting. However, applying Lasso regularization revealed an interesting dynamic: despite a negligible drop in test $R^2$ (to 0.8724), Lasso achieved the highest average Cross-Validation score (0.8580), suggesting that its built-in feature selection slightly improved the model's robustness and generalization capability across unseen data folds.
+
+\section{Conclusion}
+The experiment successfully demonstrated the application of L1 and L2 regularization on a continuous regression task. By plotting the coefficients against varying alpha values, the theoretical difference between Ridge (smooth shrinkage) and Lasso (sparse shrinkage) was practically observed. Furthermore, the learning curves confirmed that the optimal hyperparameter configurations lead to stable and generalizable predictive models for determining loan amounts.
+
+\section{References}
+\begin{enumerate}
+    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, 2011.
+    \item Tibshirani, R. "Regression Shrinkage and Selection via the Lasso." \textit{Journal of the Royal Statistical Society}, 1996.
+\end{enumerate}
+
+\end{document}

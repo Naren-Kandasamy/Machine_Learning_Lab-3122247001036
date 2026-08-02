@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ICS1512}
+\rhead{Machine Learning Algorithms Laboratory}
+\cfoot{\thepage}
+
+\lstset{
+language=Python,
+basicstyle=\ttfamily\small,
+numbers=left,
+frame=single,
+breaklines=true,
+showstringspaces=false
+}
+
+\begin{document}
+
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+Experiment No. & 1 \\ \hline
+Experiment Title & Working with Python packages-Numpy, Scipy, Scikit-Learn, Matplotlib
+\footnote{\textbf{GitHub Repository: }\url{https://github.com/Naren-Kandasamy/Machine_Learning_Lab-3122247001036}}\\ \hline
+Student Name & Naren Kandasamy \\ \hline
+Register Number & 3122247001036 \\ \hline
+Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
+Submission Date & \\ \hline
+\end{tabular}
+
+\section{Objective}
+To explore various functions and methods available in Python libraries (Numpy, Pandas, Scipy, Scikit-learn, Matplotlib) and understand key operations such as array manipulations, data preprocessing, mathematical computing, machine learning workflows, and data visualization.
+
+\section{Problem Statement}
+The objective is to become familiar with the automated machine learning data pipeline and identify the type of machine learning task associated with various public datasets (e.g., Iris, Loan prediction, Diabetes, Email spam, MNIST). Furthermore, the experiment aims to explore the steps involved in the machine learning workflow, including loading the dataset, exploratory data analysis (EDA), data preprocessing, feature selection, data splitting, and performance evaluation.
+
+\section{Dataset Description}
+
+As per the experiment requirements, the following datasets were analyzed to identify their corresponding machine learning task types, feature selection techniques, and suitable algorithms:
+
+\begin{longtable}{|p{3.5cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+\textbf{Dataset} & \textbf{Type of ML task} & \textbf{Feature Selection Technique} & \textbf{Suitable ML Algorithm} \\ \hline
+\endhead
+Iris Dataset & Supervised (Multi-class Classification) & ANOVA (SelectKBest) & Decision Tree, KNN \\ \hline
+Loan Amount Prediction & Supervised (Regression) & F-regression (SelectKBest) & Linear Regression, SVM \\ \hline
+Predicting Diabetes & Supervised (Binary Classification) & Chi-square / Mutual Information & Logistic Regression, Random Forest \\ \hline
+Classification of Email Spam & Supervised (Binary Classification) & TF-IDF / Chi-square & Naive Bayes, SVM \\ \hline
+Handwritten Character Recognition / MNIST & Supervised (Multi-class Classification) & PCA / Variance Threshold & SVM, Neural Networks (CNN) \\ \hline
+\end{longtable}
+
+\section{Exploratory Data Analysis}
+During the automated pipeline exploration, basic EDA was implemented using \texttt{Pandas} and \texttt{Matplotlib} to understand the dataset's characteristics. This includes generating dataset overviews (like \texttt{df.head()}), statistical summaries (\texttt{df.describe()}), and checking for missing values (\texttt{df.isnull().sum()}). Visualizations such as histograms and correlation matrices were explored to understand feature distributions and relationships.
+
+\section{Data Preprocessing}
+The data preprocessing steps incorporated into the master pipeline included:
+\begin{itemize}
+\item \textbf{Missing value handling:} Imputation of missing numerical values using the mean or median, and categorical values using the mode.
+\item \textbf{Encoding:} Categorical variables were encoded into numerical representations (e.g., Label Encoding or One-Hot Encoding).
+\item \textbf{Feature scaling:} Numerical features were standardized or normalized using \texttt{StandardScaler} or \texttt{MinMaxScaler} to ensure uniform scales for distance-based algorithms.
+\item \textbf{Train-test split:} Datasets were divided into training, validation, and testing sets using \texttt{train\_test\_split} from \texttt{scikit-learn} (e.g., an 85\%-15\% split).
+\item \textbf{Feature selection:} \texttt{SelectKBest} was utilized to isolate the top features for tabular data based on statistical tests.
+\end{itemize}
+
+\section{Machine Learning Algorithm}
+As this is an introductory experiment focused on libraries and workflow exploration, no specific machine learning algorithm was evaluated in depth. However, the foundational tools required to implement supervised learning models (like Scikit-Learn's \texttt{fit} and \texttt{predict} methods) were set up via a modular \texttt{run\_data\_pipeline} master function.
+
+\section{Experimental Setup}
+\begin{tabular}{ll}
+\toprule
+Python Version & 3.10+ \\
+Scikit-Learn Version & 1.0+ \\
+IDE & Jupyter Notebook / VS Code \\
+Operating System & Linux \\
+Hardware & Standard CPU Workspace \\
+\bottomrule
+\end{tabular}
+
+\section{Hyperparameter Selection}
+
+\begin{tabular}{ll}
+\toprule
+Parameter & Value\\
+\midrule
+N/A & No models trained in Exp 1 \\
+\bottomrule
+\end{tabular}
+
+\section{Results}
+
+\begin{tabular}{lc}
+\toprule
+Metric & Value\\
+\midrule
+Accuracy & N/A \\
+Precision & N/A \\
+Recall & N/A \\
+F1-score & N/A \\
+ROC-AUC & N/A \\
+\bottomrule
+\end{tabular}
+
+Since this experiment focused on establishing the preprocessing and EDA pipeline rather than model evaluation, classification metrics were deferred to subsequent experiments. The primary outcome was the successful implementation of the automated data ingestion, cleaning, and splitting pipeline that accommodates various data formats.
+
+\section{Result Visualization}
+During the execution of the pipeline, data visualization graphs were created to understand the underlying dataset shapes before processing:
+\begin{itemize}
+\item \textbf{Class Distribution Histograms:} Visualized the imbalance between Spam and Ham in NLP datasets, and disease occurrences in tabular data.
+\item \textbf{Missing Value Bar Charts:} Highlighted columns needing median/mode imputation.
+\item \textbf{Correlation Heatmaps:} Checked for collinearity among numerical features prior to scaling.
+\end{itemize}
+
+\section{Discussion}
+The experiment provided hands-on experience with the foundational Python libraries used in Data Science. By implementing a generalized pipeline, we observed that:
+\begin{itemize}
+    \item \texttt{Pandas} is highly efficient for data manipulation and handling missing values.
+    \item \texttt{Scikit-Learn} provides robust utilities for preprocessing (scaling, encoding) and dataset splitting.
+    \item Different datasets require varying preprocessing strategies (e.g., tabular data vs. NLP data).
+\end{itemize}
+The automated pipeline successfully processes diverse datasets and prepares them for future machine learning model training.
+
+\section{Conclusion}
+The objectives of the experiment were successfully met. The key Python packages (Numpy, Scipy, Scikit-Learn, Matplotlib) were explored, and an automated machine learning workflow pipeline was established. Various public datasets were analyzed to identify their associated machine learning tasks and appropriate methodologies.
+
+\section{References}
+\begin{enumerate}
+    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, vol. 12, 2011, pp. 2825-2830.
+    \item McKinney, W. "Data Structures for Statistical Computing in Python." \textit{Proceedings of the 9th Python in Science Conference}, 2010.
+    \item Hunter, J. D. "Matplotlib: A 2D Graphics Environment." \textit{Computing in Science \& Engineering}, vol. 9, no. 3, 2007, pp. 90-95.
+\end{enumerate}
+
+\end{document}
