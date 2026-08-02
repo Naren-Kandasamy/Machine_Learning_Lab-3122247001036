@@ -1,0 +1,13 @@
+# Python testing and fixing scripts
+*.py
+
+# Markdown documents
+*.md
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Diagnostics and logs
+*.log
+.system_generated/
+diagnostics/
