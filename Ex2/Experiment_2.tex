@@ -43,10 +43,10 @@ Submission Date & 02/08/2026 \\ \hline
 \end{tabular}
 
 \section{Objective}
-To implement and compare the performance of multiple Na\"{i}ve Bayes variations (Gaussian, Multinomial, Bernoulli) against K-Nearest Neighbors (KNN) on the Kaggle Spambase dataset. The experiment evaluates the effect of varying hyperparameter $k$, compares KDTree vs BallTree structures, optimizes KNN using GridSearchCV and RandomizedSearchCV, and validates using 5-Fold Cross Validation.
+In this experiment, I wanted to see how different versions of the Na\"{i}ve Bayes algorithm (like Gaussian, Multinomial, and Bernoulli) compare against a standard K-Nearest Neighbors (KNN) model. Using the Kaggle Spambase dataset, I also looked into tuning the hyperparameter $k$, comparing how fast KDTree and BallTree structures run, and using Cross Validation to make sure the results are actually reliable.
 
 \section{Problem Statement}
-The problem is to accurately classify emails as either "Spam" or "Ham" based on the occurrence and frequency of specific words and characters. The input is a text-based dataset pre-processed into 57 continuous numerical features. The output is a binary prediction ($1$ for Spam, $0$ for Ham).
+The main goal here is pretty straightforward: figure out if an email is "Spam" or "Ham" based entirely on how often certain words and characters show up in the text. The input is a table of 57 numerical features (word frequencies), and the output is just a simple binary prediction where 1 means it's spam and 0 means it's a normal email.
 
 \section{Dataset Description}
 \begin{longtable}{|p{6cm}|p{8cm}|}
@@ -61,30 +61,30 @@ Train-Test Split & Train: 3,220 | Validation: 690 | Test: 691 \\ \hline
 \end{longtable}
 
 \section{Exploratory Data Analysis}
-During the automated pipeline exploration, basic EDA was conducted. This included determining the total vocabulary size (56 predictive features plus 1 target). A class distribution plot was generated to check for class imbalance between Spam and Ham.
+I started by taking a quick look at the dataset to understand its shape. The total vocabulary size we are using is 56 predictive features plus one target label. I plotted a class distribution chart just to make sure we didn't have a massive imbalance between spam and ham emails, and it looked reasonably balanced enough to proceed.
 
 \section{Data Preprocessing}
-The data preprocessing steps for this dataset included:
+Getting the data ready involved a couple of specific steps:
 \begin{itemize}
-\item \textbf{Handling Sparsity:} Standard statistical imputation and zero-mean scaling were skipped for the Na\"{i}ve Bayes models to preserve the exact frequency structures of the features.
-\item \textbf{Scaling for KNN:} Since distance-based algorithms are highly sensitive to unscaled data, a \texttt{MinMaxScaler} was specifically applied to the training and testing sets before fitting the KNN model.
-\item \textbf{Train-test split:} The dataset was split into Training, Validation, and Testing sets using a stratified approach to maintain class ratios.
+\item \textbf{Handling Sparsity:} Since this is text frequency data, I skipped the usual mean-imputation and zero-mean scaling for the Na\"{i}ve Bayes models. I didn't want to accidentally ruin the exact frequency counts of the words.
+\item \textbf{Scaling for KNN:} KNN calculates physical distances between points, so it's super sensitive to unscaled data. I made sure to apply a \texttt{MinMaxScaler} to the training and testing sets before fitting the KNN model.
+\item \textbf{Train-test split:} I split the dataset into Training, Validation, and Testing sets. I used a stratified split so that the ratio of spam to ham stayed consistent across all the sets.
 \end{itemize}
 
 \section{Machine Learning Algorithm}
-Two primary types of algorithms were evaluated:
+I evaluated two main types of algorithms for this task:
 
 \textbf{1. Na\"{i}ve Bayes (Gaussian, Multinomial, Bernoulli):}
 \begin{itemize}
-\item \textbf{Working principle:} A probabilistic classifier based on Bayes' theorem, applying a strict "na\"{i}ve" independence assumption between the features.
-\item \textbf{Mathematical formulation:} $P(c|x) = \frac{P(x|c)P(c)}{P(x)}$ where $c$ is the class and $x$ is the feature vector.
+\item \textbf{How it works:} It's a probabilistic classifier based on Bayes' theorem. It assumes that every feature is completely independent of the others, which is a bit "na\"{i}ve" for words in an email, but it usually works pretty well anyway.
+\item \textbf{Math behind it:} $P(c|x) = \frac{P(x|c)P(c)}{P(x)}$ where $c$ is the class and $x$ is the feature vector.
 \end{itemize}
 
 \textbf{2. K-Nearest Neighbors (KNN):}
 \begin{itemize}
-\item \textbf{Working principle:} An instance-based algorithm that assigns a class based on the majority vote of the $k$ closest training examples.
-\item \textbf{Mathematical formulation:} Euclidean distance: $d(p, q) = \sqrt{\sum_{i=1}^{n} (q_i - p_i)^2}$.
-\item \textbf{Tree Structures:} KDTree and BallTree structures were used to speed up distance calculations and spatial queries over brute force.
+\item \textbf{How it works:} Instead of building an underlying probability model, it just looks at the $k$ closest data points in the training set and takes a majority vote.
+\item \textbf{Math behind it:} It usually uses straight-line Euclidean distance: $d(p, q) = \sqrt{\sum_{i=1}^{n} (q_i - p_i)^2}$.
+\item \textbf{Tree Structures:} I used KDTree and BallTree structures to help speed up the math, since calculating the distance to every single point one by one is way too slow.
 \end{itemize}
 
 \section{Experimental Setup}
@@ -101,7 +101,7 @@ Hardware & Standard CPU Workspace \\
 \section{Hyperparameter Selection}
 
 \textbf{KNN Comparison (Varying $k$):}
-By iterating over $k \in \{1, 3, 5, 7, 9, 11\}$, the highest accuracy initially observed on the un-optimized default weights was at $k=5$ (Accuracy: 0.9030), before testing distance weights.
+I tested a few different values for $k$ (1, 3, 5, 7, 9, 11). Before I added distance weighting, the highest accuracy I got was at $k=5$ (about 90.3\%).
 
 \begin{tabular}{ll}
 \toprule
@@ -158,19 +158,19 @@ BallTree & 0.0071 & 0.0942 \\
 \end{center}
 
 \section{Result Visualization}
-During execution, various evaluation plots were generated:
+While running the models, I plotted a few things to visualize what was going on:
 \begin{itemize}
-\item \textbf{Accuracy vs k:} Displaying the curve of classification accuracy as $k$ varies from 1 to 11.
-\item \textbf{ROC Curves \& PR Curves:} Comparing the area under the curve for Gaussian, Multinomial, Bernoulli NB, and the Optimized KNN.
-\item \textbf{Confusion Matrices:} 2x2 grids evaluating false positives and false negatives for all models.
-\item \textbf{GridSearchCV Heatmap:} A heatmap visualizing the Mean F1-Score across different combinations of $k$ and weights.
+\item \textbf{Accuracy vs k:} A simple line chart showing how the accuracy changed as $k$ went from 1 to 11.
+\item \textbf{ROC Curves \& PR Curves:} These curves let me compare the area under the curve for the different Na\"{i}ve Bayes models against the best KNN model.
+\item \textbf{Confusion Matrices:} I created grids to see exactly where the models were messing up (false positives vs false negatives).
+\item \textbf{GridSearchCV Heatmap:} A heatmap that made it really easy to see which combination of $k$ and weights gave the best F1-Score.
 \end{itemize}
 
 \section{Discussion}
-Multinomial Na\"{i}ve Bayes proved highly effective among the probabilistic models, achieving 89.58\% test accuracy and a high ROC-AUC of 0.9558. However, after extensive hyperparameter tuning using GridSearchCV (finding $k=7$, weights='distance'), the K-Nearest Neighbors classifier outperformed the Na\"{i}ve Bayes variations, achieving a stable average 5-Fold CV Accuracy of 90.85\%. Furthermore, utilizing the BallTree algorithm proved slightly faster than KDTree for spatial predictions on the 57-dimensional dataset.
+The results were actually pretty interesting. Multinomial Na\"{i}ve Bayes proved to be highly effective, hitting almost 90\% test accuracy and a really high ROC-AUC of 0.9558. But, once I spent some time tuning the KNN classifier using GridSearchCV (which settled on $k=7$ and distance-based weights), KNN actually managed to pull ahead. It got a very stable average accuracy of 90.85\% across the 5-fold cross-validation. Also, between the two tree algorithms I tested, BallTree ended up being slightly faster than KDTree for making predictions on this dataset.
 
 \section{Conclusion}
-In conclusion, the experiment demonstrated that while probabilistic models like Multinomial Na\"{i}ve Bayes are extremely fast and perform well on text data, distance-based algorithms like K-Nearest Neighbors can achieve superior classification performance (90.85\% Accuracy) after careful hyperparameter tuning and spatial tree optimization.
+To wrap things up, the experiment showed that while probabilistic models like Na\"{i}ve Bayes are super fast and great for dealing with text data, you can actually beat them with distance-based algorithms like KNN if you take the time to scale the data and tune the hyperparameters properly. Both models did a great job at figuring out what was spam and what wasn't.
 
 \section{References}
 \begin{enumerate}

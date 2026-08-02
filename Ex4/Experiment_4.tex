@@ -43,10 +43,10 @@ Submission Date & 02/08/2026 \\ \hline
 \end{tabular}
 
 \section{Objective}
-To implement Logistic Regression and Support Vector Machines (SVM) for binary classification on the Kaggle Spambase dataset. The experiment compares SVM performance across different kernels (Linear, Polynomial, RBF, Sigmoid) and performs hyperparameter tuning using RandomizedSearchCV to optimize both models.
+In this experiment, I wanted to try out Logistic Regression and Support Vector Machines (SVM) to classify emails as spam or ham using the Kaggle Spambase dataset. I also tested out a few different SVM kernels (Linear, Polynomial, RBF, and Sigmoid) to see which one works best, and used RandomizedSearchCV to tune the hyperparameters for both models.
 
 \section{Problem Statement}
-The objective is to accurately classify an email as either "Spam" ($1$) or "Ham" ($0$). The input is a robust text-frequency dataset of 57 continuous numerical features representing word and character frequencies. The goal is to maximize classification metrics (Accuracy, Precision, Recall, F1-Score) while balancing training times by applying margin-based and probabilistic linear classifiers.
+The main goal is to accurately tag an email as "Spam" ($1$) or "Ham" ($0$). The input is a dataset with 57 numerical features that mostly just count how often certain words and characters show up in an email. The idea is to get the best possible classification metrics (like Accuracy and F1-Score) while making sure the models don't take forever to train.
 
 \section{Dataset Description}
 \begin{longtable}{|p{6cm}|p{8cm}|}
@@ -61,29 +61,29 @@ Train-Test Split & Train: 3,220 | Validation: 690 | Test: 691 \\ \hline
 \end{longtable}
 
 \section{Exploratory Data Analysis}
-EDA confirmed that there is a slight class imbalance (more ham than spam emails), which necessitates the evaluation of F1-Score in addition to strict Accuracy. Features primarily represent float frequencies, requiring uniform scaling so that margin-based algorithms like SVM treat spatial distances fairly.
+When looking at the data, I noticed there were a few more ham emails than spam emails. Because of this slight imbalance, I realized I couldn't just rely on standard accuracy to tell me if the model was doing well; I needed to look at the F1-Score too. Also, since the features are just word frequency counts, they really needed to be scaled so the models would treat them fairly.
 
 \section{Data Preprocessing}
 \begin{itemize}
-\item \textbf{Feature Scaling:} Standardized all features using \texttt{StandardScaler} to achieve zero mean and unit variance. This is extremely critical for SVMs, as they are highly sensitive to unscaled distances, and beneficial for Logistic Regression convergence.
-\item \textbf{Sparsity Management:} Because this is NLP-derived tabular data, traditional missing value imputation was omitted as zero implies the true absence of a word.
-\item \textbf{Train-test split:} The dataset was split into Training, Validation, and Testing sets using a stratified approach.
+\item \textbf{Feature Scaling:} I made sure to standardize all the features using \texttt{StandardScaler} so they all had a mean of zero and a variance of one. This is super critical for SVMs because they rely heavily on physical distances between data points, and it also helps Logistic Regression converge faster.
+\item \textbf{Sparsity Management:} Because this dataset is basically a list of word counts, I didn't bother trying to fill in missing values with averages. If a word frequency is zero, it just means the word wasn't in the email.
+\item \textbf{Train-test split:} I split the dataset into Training, Validation, and Testing sets. I made sure to use a stratified split so the percentage of spam emails stayed the same across all three sets.
 \end{itemize}
 
 \section{Machine Learning Algorithm}
 
 \textbf{1. Logistic Regression:}
 \begin{itemize}
-\item \textbf{Working principle:} Models the probability of the default class using a logistic (sigmoid) function.
-\item \textbf{Mathematical formulation:} $P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X)}}$
-\item \textbf{Advantages:} Highly interpretable, provides probability outputs, scales well to large datasets.
+\item \textbf{How it works:} It calculates the probability that an email belongs to a certain class using a logistic (sigmoid) curve. If the probability is over 50\%, it calls it spam.
+\item \textbf{Math behind it:} $P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X)}}$
+\item \textbf{Pros:} It's really easy to interpret, it gives you actual probability percentages, and it runs incredibly fast even on big datasets.
 \end{itemize}
 
 \textbf{2. Support Vector Machine (SVM):}
 \begin{itemize}
-\item \textbf{Working principle:} Finds the optimal hyperplane that maximizes the margin between the two classes.
-\item \textbf{Mathematical formulation:} $\min \frac{1}{2} ||w||^2 + C \sum \xi_i$ subject to $y_i(w \cdot x_i + b) \ge 1 - \xi_i$.
-\item \textbf{Kernels:} Uses the kernel trick to project data into higher dimensions if it is not linearly separable.
+\item \textbf{How it works:} It tries to find the best possible line (or hyperplane) that separates the spam emails from the ham emails with the widest margin possible.
+\item \textbf{Math behind it:} It minimizes $\frac{1}{2} ||w||^2 + C \sum \xi_i$ while keeping the data points on the correct side of the margin.
+\item \textbf{Kernels:} If a straight line can't separate the data, the "kernel trick" temporarily bumps the data into a higher dimension to find a curve that can separate it.
 \end{itemize}
 
 \section{Experimental Setup}
@@ -99,7 +99,7 @@ Hardware & Standard CPU Workspace \\
 
 \section{Hyperparameter Selection}
 
-RandomizedSearchCV was employed to find the best configuration for the models over the high-dimensional space.
+I used RandomizedSearchCV to randomly test a bunch of different parameter combinations without taking up too much compute time.
 
 \begin{tabular}{lp{9cm}}
 \toprule
@@ -152,7 +152,7 @@ SVM (Linear Kernel) & 0.9283 ($\pm 0.0045$) & 0.9079 ($\pm 0.0062$) \\
 
 \section{Result Visualization}
 
-During the execution, the following graphical assessments were made:
+I saved a few graphs to visualize how the models were doing:
 
 \begin{figure}[H]
 \centering
@@ -160,7 +160,7 @@ During the execution, the following graphical assessments were made:
 \caption{Confusion Matrix comparison between Logistic Regression and SVM (Linear)}
 \end{figure}
 
-\textbf{Inference:} The confusion matrices demonstrate that both models perform exceptionally well, but Logistic Regression produces slightly fewer false positives, while SVM minimizes false negatives.
+\textbf{Inference:} Looking at the confusion matrices, you can tell both models do a really good job. Logistic Regression had slightly fewer false positives (meaning it rarely marked a real email as spam), while SVM was a bit better at catching actual spam (fewer false negatives).
 
 \begin{figure}[H]
 \centering
@@ -168,13 +168,13 @@ During the execution, the following graphical assessments were made:
 \caption{Receiver Operating Characteristic (ROC) Curve}
 \end{figure}
 
-\textbf{Inference:} The ROC curve indicates a high area under the curve (AUC) for both models. SVM barely edges out Logistic Regression, proving it is highly capable of distinguishing between Ham and Spam effectively across different thresholds.
+\textbf{Inference:} The ROC curve shows a really high area under the curve (AUC) for both models. SVM just barely beats Logistic Regression here, showing it's really solid at telling the difference between spam and ham.
 
 \section{Discussion}
-The experiment showed that for the Spambase dataset, the Linear Kernel outperformed non-linear kernels (like Poly and Sigmoid) in accuracy (0.9276 vs 0.8437). This suggests that text-frequency features are generally linearly separable in high-dimensional space. While both Logistic Regression and SVM achieved very similar accuracies post-tuning ($~92.5\%$), Logistic Regression trained significantly faster ($0.0197s$ vs $0.3215s$). The cross-validation confirmed these results were stable and robust against overfitting.
+One of the most interesting things I found was that the simple Linear Kernel actually beat the more complex non-linear kernels (like Poly and Sigmoid) by a pretty wide margin (about 92.7\% accuracy compared to 84.3\%). This pretty much proves that word-frequency text data is usually linearly separable if you have enough dimensions. After tuning, both Logistic Regression and SVM ended up with very similar accuracy scores (around 92.5\%), but Logistic Regression trained way faster. The cross-validation scores proved that these results were solid and the models weren't just overfitting to the training set.
 
 \section{Conclusion}
-The experiment successfully implemented Logistic Regression and SVM classifiers. By comparing various SVM kernels, the superiority of the Linear Kernel for this specific NLP feature-set was observed. Both models proved highly competent for spam classification, with Logistic Regression providing the advantage of speed and probability outputs, while SVM provided slightly better strict margin generalization (higher cross-validation F1-score).
+Overall, this lab showed how effective both Logistic Regression and SVM can be for NLP classification tasks. Testing out the different SVM kernels really highlighted that for this specific type of word-frequency data, a Linear Kernel is definitely the way to go. Both models were great at catching spam, but Logistic Regression was much faster and gives you nice probability percentages, while SVM offered a slightly better overall generalization based on the cross-validation scores.
 
 \section{References}
 \begin{enumerate}

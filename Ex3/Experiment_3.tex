@@ -43,10 +43,10 @@ Submission Date & 02/08/2026 \\ \hline
 \end{tabular}
 
 \section{Objective}
-To implement linear regression using Regularization techniques including L1 (Lasso), L2 (Ridge), and L1+L2 (ElasticNet). The experiment also aims to perform hyperparameter tuning to find appropriate alpha penalization values using Cross-Validation, plot the regularized coefficients versus alpha, and plot learning curves for the regularized models.
+The goal of this experiment is to build a linear regression model and see how adding different regularization techniques (Lasso, Ridge, and ElasticNet) affects it. I'll also be doing some hyperparameter tuning with cross-validation to find the best alpha values, plotting how the coefficients change, and graphing learning curves to see how the models improve as they get more data.
 
 \section{Problem Statement}
-The problem requires building a robust regression model to predict the continuous \texttt{loan\_amount} variable based on applicant features such as income, assets, and dependents. The input is tabular demographic and financial data, and the output is a continuous predicted loan amount, scaled appropriately. The objective is to apply regularization to prevent overfitting and improve generalization.
+The problem we're trying to solve here is predicting a continuous number—specifically, how much of a loan someone should get based on things like their income, assets, and dependents. Since we're dealing with tabular data to predict a continuous output, this is a classic regression problem. We're using regularization to make sure the model doesn't overfit to the training data.
 
 \section{Dataset Description}
 \begin{longtable}{|p{6cm}|p{8cm}|}
@@ -61,23 +61,23 @@ Train-Test Split & Train: 2,921 | Validation: 626 | Test: 626 \\ \hline
 \end{longtable}
 
 \section{Exploratory Data Analysis}
-Exploratory analysis was performed to understand feature distributions. Visualizations and statistical summaries highlighted that some applicant features (like income and asset values) had significant skew. A total of 96 extreme outlier rows were identified and dropped before scaling the dataset.
+I looked at the distributions of the features first. It was pretty obvious that things like applicant income and asset values were highly skewed, which makes sense in the real world since a few people earn way more than average. I ended up finding and dropping about 96 extreme outlier rows so they wouldn't pull the regression line too far off track.
 
 \section{Data Preprocessing}
 \begin{itemize}
-\item \textbf{Missing Value Handling:} Numerical columns were imputed with their median. Categorical columns (like Education, Self-Employed, Loan\_Status) were imputed using the mode.
-\item \textbf{Encoding:} Categorical string columns were encoded into numeric category codes for matrix compatibility.
-\item \textbf{Feature Scaling:} All numerical continuous columns, including \texttt{income\_annum}, \texttt{cibil\_score}, and asset values were standardized (zero mean, unit variance) to ensure regularization penalties were applied uniformly across features.
-\item \textbf{Outlier Removal:} Extreme outliers were removed to prevent distortion in the Ordinary Least Squares (OLS) distance calculations.
+\item \textbf{Missing Value Handling:} For the missing values, I just plugged in the median for numbers and the most frequent category (mode) for text columns.
+\item \textbf{Encoding:} The algorithms need numbers to do math, so I converted all the string categories (like Education or Self-Employed status) into basic numeric codes.
+\item \textbf{Feature Scaling:} I standardized all the continuous numerical columns to have a zero mean and unit variance. This step is absolutely necessary because regularization penalizes large weights, so if the features aren't on the same scale, the penalty is applied unfairly.
+\item \textbf{Outlier Removal:} As mentioned, removing outliers was key so the distance calculations didn't get distorted.
 \end{itemize}
 
 \section{Machine Learning Algorithm}
-Four variations of Linear Regression were tested:
+I tested four different models to see which one handles the data best:
 \begin{itemize}
-\item \textbf{Standard Linear Regression:} Fits a linear model minimizing the residual sum of squares between the observed targets and predictions. No regularization penalty.
-\item \textbf{Ridge (L2):} Adds an L2 penalty equal to the square of the magnitude of coefficients. Formula: $Cost = RSS + \alpha \sum \beta_i^2$.
-\item \textbf{Lasso (L1):} Adds an L1 penalty equal to the absolute value of the magnitude of coefficients. Can yield sparse models where some coefficients become exactly zero. Formula: $Cost = RSS + \alpha \sum |\beta_i|$.
-\item \textbf{ElasticNet (L1+L2):} A convex combination of Ridge and Lasso penalties, controlled by an \texttt{l1\_ratio} parameter.
+\item \textbf{Standard Linear Regression:} This just draws a line that minimizes the squared error between the predictions and the actual loan amounts. No penalties involved.
+\item \textbf{Ridge (L2):} This adds a penalty based on the square of the coefficients. It pulls the weights closer to zero so no single feature dominates. $Cost = RSS + \alpha \sum \beta_i^2$.
+\item \textbf{Lasso (L1):} This adds a penalty based on the absolute value of the coefficients. Unlike Ridge, it can actually push some weights exactly to zero, which basically acts like automatic feature selection. $Cost = RSS + \alpha \sum |\beta_i|$.
+\item \textbf{ElasticNet (L1+L2):} This is just a mix of both Ridge and Lasso, and you can control the mix with the \texttt{l1\_ratio} parameter.
 \end{itemize}
 
 \section{Experimental Setup}
@@ -93,7 +93,7 @@ Hardware & Standard CPU Workspace \\
 
 \section{Hyperparameter Selection}
 
-To optimize the regularization models, GridSearchCV was utilized to test various \texttt{alpha} penalty weights across cross-validated folds.
+To find the best models, I used GridSearchCV to test out different \texttt{alpha} penalty weights using cross-validation.
 
 \begin{tabular}{ll}
 \toprule
@@ -137,7 +137,7 @@ ElasticNet Regression & 0.8578 ($\pm 0.0130$) \\
 
 \section{Result Visualization}
 
-During the execution, the following graphs were generated to analyze the algorithms:
+I generated a couple of plots to better understand how the models were working under the hood:
 
 \begin{figure}[H]
 \centering
@@ -145,7 +145,7 @@ During the execution, the following graphs were generated to analyze the algorit
 \caption{Regularized Coefficients vs Alpha for Ridge and Lasso}
 \end{figure}
 
-\textbf{Inference:} Plotted on a logarithmic scale, these plots visually demonstrate how Lasso aggressively pushes coefficient values to exactly zero as alpha increases, performing intrinsic feature selection. In contrast, Ridge shrinks them asymptotically towards zero without removing them entirely.
+\textbf{Inference:} Looking at this plot (which uses a log scale), you can clearly see how Lasso aggressively drops coefficient values to exactly zero as you turn up the alpha penalty. It's essentially filtering out the bad features. Ridge, on the other hand, just shrinks them all smoothly towards zero without fully dropping them.
 
 \begin{figure}[H]
 \centering
@@ -153,13 +153,13 @@ During the execution, the following graphs were generated to analyze the algorit
 \caption{Learning Curves for Ridge, Lasso, and ElasticNet}
 \end{figure}
 
-\textbf{Inference:} The learning curves showcase the training and cross-validation $R^2$ scores as a function of the number of training examples. The tight convergence of the curves across all models indicates that they do not suffer from high variance (overfitting) and stabilize quickly with increasing data.
+\textbf{Inference:} These curves show how the $R^2$ scores change as the model sees more training data. Because the training and cross-validation lines converge pretty tightly for all the models, it shows that they aren't overfitting and that they stabilize fairly quickly.
 
 \section{Discussion}
-The baseline Linear Regression model performed strongly with an $R^2$ of 0.8736. Applying Ridge and ElasticNet regularization yielded nearly identical performance, indicating that the baseline model was not severely overfitting. However, applying Lasso regularization revealed an interesting dynamic: despite a negligible drop in test $R^2$ (to 0.8724), Lasso achieved the highest average Cross-Validation score (0.8580), suggesting that its built-in feature selection slightly improved the model's robustness and generalization capability across unseen data folds.
+The standard linear regression actually did really well right out of the box, getting an $R^2$ of about 0.87. Adding Ridge and ElasticNet gave almost identical results, which tells me the baseline model wasn't really suffering from severe overfitting to begin with. But the interesting part was Lasso: even though its test score dropped very slightly, it ended up getting the best average score during the 5-fold cross-validation. This implies that dropping a few weak features actually made the model slightly more robust on new, unseen data.
 
 \section{Conclusion}
-The experiment successfully demonstrated the application of L1 and L2 regularization on a continuous regression task. By plotting the coefficients against varying alpha values, the theoretical difference between Ridge (smooth shrinkage) and Lasso (sparse shrinkage) was practically observed. Furthermore, the learning curves confirmed that the optimal hyperparameter configurations lead to stable and generalizable predictive models for determining loan amounts.
+In the end, this lab was a great way to see how L1 and L2 regularization actually work in practice. The plots really helped visualize the theoretical difference between Ridge (which just shrinks weights) and Lasso (which drops them entirely). The learning curves also confirmed that once we tuned the hyperparameters, the models were stable and did a solid job at predicting the loan amounts.
 
 \section{References}
 \begin{enumerate}

@@ -43,14 +43,14 @@ Submission Date & 02/08/2026 \\ \hline
 \end{tabular}
 
 \section{Objective}
-To explore various functions and methods available in Python libraries (Numpy, Pandas, Scipy, Scikit-learn, Matplotlib) and understand key operations such as array manipulations, data preprocessing, mathematical computing, machine learning workflows, and data visualization.
+In this lab, the main goal is to get hands-on experience with standard Python data science libraries like Numpy, Pandas, Scipy, Scikit-learn, and Matplotlib. We want to understand how to handle data arrays, clean up messy datasets, set up basic machine learning pipelines, and create some helpful visualizations.
 
 \section{Problem Statement}
-The objective is to become familiar with the automated machine learning data pipeline and identify the type of machine learning task associated with various public datasets (e.g., Iris, Loan prediction, Diabetes, Email spam, MNIST). Furthermore, the experiment aims to explore the steps involved in the machine learning workflow, including loading the dataset, exploratory data analysis (EDA), data preprocessing, feature selection, data splitting, and performance evaluation.
+The main task is to build a basic automated data processing pipeline. We'll look at a few different public datasets (like the Iris dataset, Loan Prediction, Diabetes, Email Spam, and MNIST) to identify what kind of machine learning problem they represent. We also want to walk through the typical workflow steps: loading the data, doing some exploratory data analysis (EDA), cleaning things up, selecting the best features, and finally splitting the data so it's ready for model training later.
 
 \section{Dataset Description}
 
-As per the experiment requirements, the following datasets were analyzed to identify their corresponding machine learning task types, feature selection techniques, and suitable algorithms:
+Based on the lab requirements, I went through several datasets to figure out what kind of ML task they belong to, what feature selection method works best, and which algorithms we could potentially use:
 
 \begin{longtable}{|p{3.5cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
 \hline
@@ -64,16 +64,16 @@ Handwritten Character Recognition / MNIST & Supervised (Multi-class Classificati
 \end{longtable}
 
 \section{Exploratory Data Analysis}
-During the automated pipeline exploration, basic EDA was implemented using \texttt{Pandas} and \texttt{Matplotlib} to understand the dataset's characteristics. This includes generating dataset overviews (like \texttt{df.head()}), statistical summaries (\texttt{df.describe()}), and checking for missing values (\texttt{df.isnull().sum()}). Visualizations such as histograms and correlation matrices were explored to understand feature distributions and relationships.
+I started by just looking at the datasets using Pandas and Matplotlib to see what we were dealing with. By printing out the first few rows with \texttt{df.head()} and running quick statistical summaries via \texttt{df.describe()}, I could get a good feel for the numbers. I also checked for missing values and plotted some basic histograms and correlation matrices to see how the features were distributed and if any of them were highly related.
 
 \section{Data Preprocessing}
-The data preprocessing steps incorporated into the master pipeline included:
+To get the data ready for actual machine learning, I built a pipeline that does a few key things:
 \begin{itemize}
-\item \textbf{Missing value handling:} Imputation of missing numerical values using the mean or median, and categorical values using the mode.
-\item \textbf{Encoding:} Categorical variables were encoded into numerical representations (e.g., Label Encoding or One-Hot Encoding).
-\item \textbf{Feature scaling:} Numerical features were standardized or normalized using \texttt{StandardScaler} or \texttt{MinMaxScaler} to ensure uniform scales for distance-based algorithms.
-\item \textbf{Train-test split:} Datasets were divided into training, validation, and testing sets using \texttt{train\_test\_split} from \texttt{scikit-learn} (e.g., an 85\%-15\% split).
-\item \textbf{Feature selection:} \texttt{SelectKBest} was utilized to isolate the top features for tabular data based on statistical tests.
+\item \textbf{Fixing missing values:} If a number was missing, I usually replaced it with the median. If it was a category (like a word), I just used the most common value (the mode).
+\item \textbf{Encoding:} Since models can't read text strings, I converted categorical variables into numbers using simple label encoding.
+\item \textbf{Scaling features:} I scaled the numerical columns to a standard range using \texttt{StandardScaler}. This is super important so that features with naturally larger numbers don't unfairly dominate the distance calculations later.
+\item \textbf{Train-test split:} I split the datasets into a training set and a testing set (typically around an 85\%-15\% split) using \texttt{train\_test\_split} from Scikit-Learn.
+\item \textbf{Feature selection:} I used \texttt{SelectKBest} to figure out which features actually matter the most based on statistical scoring.
 \end{itemize}
 
 \section{Machine Learning Algorithm}
@@ -97,24 +97,18 @@ Not applicable for this introductory experiment.
 Not applicable for this introductory experiment.
 
 \section{Result Visualization}
-During the execution of the pipeline, data visualization graphs were created to understand the underlying dataset shapes before processing:
+While running the pipeline, I generated a few graphs just to understand the data before modifying it:
 \begin{itemize}
-\item \textbf{Class Distribution Histograms:} Visualized the imbalance between Spam and Ham in NLP datasets, and disease occurrences in tabular data.
-\item \textbf{Missing Value Bar Charts:} Highlighted columns needing median/mode imputation.
-\item \textbf{Correlation Heatmaps:} Checked for collinearity among numerical features prior to scaling.
+\item \textbf{Class Distribution Histograms:} These showed the imbalance between Spam and Ham in the email dataset, and how many people had diabetes versus those who didn't in the medical data.
+\item \textbf{Missing Value Bar Charts:} These quickly highlighted which columns were missing the most data and needed the most imputation.
+\item \textbf{Correlation Heatmaps:} I used these to check if any numerical features were basically measuring the same thing before I scaled them.
 \end{itemize}
 
 \section{Discussion}
-The experiment provided hands-on experience with the foundational Python libraries used in Data Science. By implementing a generalized pipeline, we observed that:
-\begin{itemize}
-    \item \texttt{Pandas} is highly efficient for data manipulation and handling missing values.
-    \item \texttt{Scikit-Learn} provides robust utilities for preprocessing (scaling, encoding) and dataset splitting.
-    \item Different datasets require varying preprocessing strategies (e.g., tabular data vs. NLP data).
-\end{itemize}
-The automated pipeline successfully processes diverse datasets and prepares them for future machine learning model training.
+Going through this lab really showed how useful these Python libraries are for data science. Pandas makes it incredibly easy to fix missing data and move columns around without much code. Scikit-Learn handles all the heavy lifting for scaling and splitting the datasets, which saves a ton of time. I also noticed pretty quickly that different types of data (like tabular numbers versus text data) need completely different cleaning strategies. Overall, the automated pipeline we built does a solid job of preparing diverse datasets for whatever model we want to throw at them next.
 
 \section{Conclusion}
-The objectives of the experiment were successfully met. The key Python packages (Numpy, Scipy, Scikit-Learn, Matplotlib) were explored, and an automated machine learning workflow pipeline was established. Various public datasets were analyzed to identify their associated machine learning tasks and appropriate methodologies.
+The lab went really well and the main objectives were met. I got comfortable using Numpy, Pandas, Scikit-Learn, and Matplotlib, and managed to put together a flexible data preprocessing pipeline. Looking at all the different datasets helped me understand how to frame a problem and pick the right approach before we even start training models.
 
 \section{References}
 \begin{enumerate}
