@@ -47,7 +47,7 @@ To study the effect of dimensionality reduction using Principal Component Analys
 ---
 
 ### Table 3: Multi-Dataset Statistical Significance Testing (Wilcoxon Signed-Rank Test)
-| Dataset | Wilcoxon $W$ | $p$-value | Mean $\Delta$ F1 | Significant ($lpha=0.05$) | Key Inference |
+| Dataset | Wilcoxon $W$ | $p$-value | Mean $\Delta$ F1 | Significant ($\alpha = 0.05$) | Key Inference |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **Breast Cancer** | 17.0 | 0.3223 | -0.0012 | **No** (Indistinguishable) | 66.7% dimension compression with zero loss. |
 | **Spambase** | 4.0 | 0.0137 | -0.0129 | **Yes** (Degradation) | Dense orthogonal rotations disrupt sparse word splits. |
@@ -57,11 +57,11 @@ To study the effect of dimensionality reduction using Principal Component Analys
 | **Optical Digits** | 11.0 | 0.1055 | -0.0112 | **No** (Indistinguishable) | Digit manifold preserved with 37.5% pixel reduction. |
 
 * **Global Wilcoxon Test ($N=60$):** $W = 179.0, p = 2.68 \times 10^{-7}$ (Statistically Significant overall, Mean $\Delta \text{F1} = -0.0220$).
-* **Global Paired $t$-Test ($N=60$):** $t = -4.717, p = 1.51 \times 10^{-5}$ ($\alpha=0.05$).
+* **Global Paired $t$-Test ($N=60$):** $t = -4.717, p = 1.51 \times 10^{-5}$ ($\alpha = 0.05$).
 
 ---
 
-### Table 4: Multi-Algorithm Benchmark Ranking (Friedman Omnibus Test)
+### Table 4: Multi-Algorithm Benchmark Ranking (Friedman Test)
 | Algorithm | Avg Rank (No-PCA) | Avg Rank (With-PCA) | Rank Shift | Primary Mechanism |
 | :--- | :---: | :---: | :---: | :--- |
 | **Logistic Regression** | 4.42 | **3.17** | **-1.25** (Gained) | Top performer under PCA; orthogonal hyperplanes align. |
