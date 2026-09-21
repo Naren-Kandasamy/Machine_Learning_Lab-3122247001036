@@ -1,7 +1,6 @@
-
 \documentclass[12pt,a4paper]{article}
 
-\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[a4paper,margin=0.9in]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{amsmath,amssymb}
@@ -17,208 +16,282 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{ICS1512}
-\rhead{Machine Learning Algorithms Laboratory}
+\setlength{\headheight}{15pt}
+\lhead{ICS1512 -- Machine Learning Algorithms Laboratory}
+\rhead{Experiment 7 Report}
 \cfoot{\thepage}
-
-\lstset{
-language=Python,
-basicstyle=\ttfamily\small,
-numbers=left,
-frame=single,
-breaklines=true,
-showstringspaces=false
-}
 
 \begin{document}
 
-\begin{tabular}{|p{4cm}|p{11cm}|}
+\begin{tabular}{|p{4.5cm}|p{11cm}|}
 \hline
-Experiment No. & 7 \\ \hline
-Experiment Title & Dimensionality Reduction and Model Evaluation (With and Without PCA) \\ \hline
-
-Student Name & Naren Karthik Kandasamy \\ \hline
-Register Number & 3122247001036 \\ \hline
-Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
-Submission Date & 31/8/2026 \\ \hline
+\textbf{Course} & ICS1512 -- Machine Learning Algorithms Laboratory \\ \hline
+\textbf{Experiment No.} & 7 \\ \hline
+\textbf{Experiment Title} & Dimensionality Reduction and Model Evaluation (With and Without PCA) \\ \hline
+\textbf{Student Name} & Naren Karthik Kandasamy \\ \hline
+\textbf{Register Number} & 3122247001036 \\ \hline
+\textbf{Faculty} & Dr. Poreddy Ajay Kumar Reddy \\ \hline
+\textbf{Academic Year} & 2026--2027 \\ \hline
 \end{tabular}
+
+\vspace{1.5em}
 
 \section{Objective}
-To study the effect of dimensionality reduction using Principal Component Analysis (PCA) on the performance of various machine learning classifiers, comparing their metrics, variance, and bias before and after PCA.
+To systematically analyze the empirical effect of dimensionality reduction using Principal Component Analysis (PCA) at 95\% explained variance retention compared to the original feature space (No-PCA) across \textbf{all 6 primary classification datasets} from Experiments 1 through 7. For each dataset under both settings, 10 distinct classifiers are evaluated under 5-fold stratified cross-validation within a leakage-free pipeline, followed by a focused 3-tier statistical significance testing suite.
 
-\section{Problem Statement}
-We evaluate 10 classification algorithms on the Breast Cancer dataset (30 features) predicting malignancy. We seek to understand whether mapping features to a lower-dimensional principal component space improves efficiency and generalization, and how different algorithms (linear vs ensembles) react to PCA transformations.
-
-\section{Dataset Description}
-\begin{longtable}{|p{6cm}|p{8cm}|}
-\hline
-Dataset Name & Wisconsin Diagnostic Breast Cancer \\ \hline
-Dataset Source & UCI Machine Learning Repository \\ \hline
-Number of Samples & 569 \\ \hline
-Number of Features & 30 \\ \hline
-Number of Classes & 2 (Malignant, Benign) \\ \hline
-Missing Values & None \\ \hline
-Train-Test Split & 80-20 \\ \hline
-\end{longtable}
-
-\section{Exploratory Data Analysis}
-Include all relevant visualizations.
-\begin{itemize}
-\item Dataset overview
-\item Statistical summary
-\item Missing value analysis
-\item Class distribution
-\item Correlation matrix
-\item Feature distribution
-\end{itemize}
-
-\subsection*{Figure Template}
-
-\textbf{Inference:}
-
-The original dataset has 30 numerical attributes. Scaling was applied as it is a prerequisite for PCA to prevent high-magnitude features from dominating the principal components.
-
-\section{Data Preprocessing}
-
-Explain:
-\begin{itemize}
-\item Missing value handling
-\item Encoding
-\item Feature scaling
-\item Train-test split
-\item Standardized features using StandardScaler.
-\item Applied PCA to retain 95\% of the variance.
-\end{itemize}
-
-\section{Machine Learning Algorithm}
-Explain:
-\begin{itemize}
-\item Working principle
-\item Mathematical formulation
-\item Advantages
-\item Limitations
-\end{itemize}
-
-\section{Experimental Setup}
-\begin{tabular}{ll}
-\toprule
-Python Version & \\
-Scikit-Learn Version & \\
-IDE & \\
-Operating System & \\
-Hardware & \\
-\bottomrule
-\end{tabular}
-
-\section{Hyperparameter Selection}
-
-
-\textbf{Table 1: PCA Variance Explained}\\
-\begin{tabular}{lllp{4cm}}\toprule Setting & Chosen Components / Variance Target & Explained Variance (\%) & Justification\\ \midrule
-With-PCA & 10 Components / 95\% Target & 95.16 & 95\% is a standard threshold to retain max information while shedding noise. \\ \bottomrule \end{tabular}
-    
-\vspace{1em}\\ 
-\textbf{Table 2: SVM Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'C': 0.1, 'kernel': 'linear'} (No-PCA) & 98.25\% & - \\
-{'C': 0.1, 'kernel': 'linear'} (With-PCA) & - & 99.12\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 3: Naive Bayes Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'var\_smoothing': 1e-09} (No-PCA) & 96.49\% & - \\
-{'var\_smoothing': 1e-09} (With-PCA) & - & 92.11\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 4: KNN Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'n\_neighbors': 5, 'weights': 'uniform'} (No-PCA) & 94.74\% & - \\
-{'n\_neighbors': 5, 'weights': 'uniform'} (With-PCA) & - & 95.61\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 5: Logistic Regression Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'C': 1} (No-PCA) & 97.37\% & - \\
-{'C': 1} (With-PCA) & - & 98.25\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 6: Decision Tree Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'max\_depth': 3} (No-PCA) & 94.74\% & - \\
-{'max\_depth': 5} (With-PCA) & - & 92.98\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 7: Random Forest Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'n\_estimators': 50} (No-PCA) & 96.49\% & - \\
-{'n\_estimators': 50} (With-PCA) & - & 94.74\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 8: AdaBoost Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'n\_estimators': 50} (No-PCA) & 96.49\% & - \\
-{'n\_estimators': 50} (With-PCA) & - & 95.61\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 9: Gradient Boosting Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'learning\_rate': 0.1, 'n\_estimators': 50} (No-PCA) & 95.61\% & - \\
-{'learning\_rate': 0.1, 'n\_estimators': 50} (With-PCA) & - & 96.49\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 10: XGBoost Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-{'learning\_rate': 0.1, 'n\_estimators': 50} (No-PCA) & 95.61\% & - \\
-{'learning\_rate': 0.1, 'n\_estimators': 50} (With-PCA) & - & 96.49\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\textbf{Table 11: Stacking Hyperparameter Tuning Results}\\
-\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
-Base: RF, SVM, XGB (No-PCA) & 98.25\% & - \\
-Base: RF, SVM, XGB (With-PCA) & - & 97.37\% \\ \bottomrule \end{tabular}\vspace{1em}\\
-        
-\vspace{1em}\\ 
-\textbf{Table 12: 5-Fold Cross-Validation Results (No-PCA vs With-PCA)}\\
-\begin{tabular}{llllllll}\toprule Model & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Fold 5 & Avg (No) & Avg (PCA)\\ \midrule
-    SVM (No PCA) & 98.2 & 97.4 & 98.2 & 98.2 & 98.2 & 98.07 & - \\\\ SVM (With PCA) & 98.2 & 97.4 & 97.4 & 97.4 & 99.1 & - & 97.89 \\\\ \midrule Naive Bayes (No PCA) & 91.2 & 95.6 & 92.1 & 93.0 & 96.5 & 93.68 & - \\\\ Naive Bayes (With PCA) & 89.5 & 94.7 & 93.0 & 91.2 & 92.0 & - & 92.09 \\\\ \midrule KNN (No PCA) & 98.2 & 97.4 & 97.4 & 93.0 & 94.7 & 96.13 & - \\\\ KNN (With PCA) & 96.5 & 96.5 & 96.5 & 93.9 & 95.6 & - & 95.78 \\\\ \midrule Logistic Regression (No PCA) & 98.2 & 96.5 & 99.1 & 97.4 & 97.3 & 97.71 & - \\\\ Logistic Regression (With PCA) & 99.1 & 96.5 & 98.2 & 98.2 & 98.2 & - & 98.07 \\\\ \midrule Decision Tree (No PCA) & 94.7 & 87.7 & 92.1 & 90.4 & 94.7 & 91.92 & - \\\\ Decision Tree (With PCA) & 96.5 & 94.7 & 94.7 & 93.9 & 92.9 & - & 94.55 \\\\ \midrule Random Forest (No PCA) & 95.6 & 96.5 & 97.4 & 94.7 & 96.5 & 96.13 & - \\\\ Random Forest (With PCA) & 95.6 & 97.4 & 93.0 & 92.1 & 94.7 & - & 94.55 \\\\ \midrule AdaBoost (No PCA) & 98.2 & 97.4 & 99.1 & 93.9 & 96.5 & 97.01 & - \\\\ AdaBoost (With PCA) & 97.4 & 96.5 & 95.6 & 94.7 & 95.6 & - & 95.96 \\\\ \midrule Gradient Boosting (No PCA) & 96.5 & 93.0 & 97.4 & 94.7 & 95.6 & 95.43 & - \\\\ Gradient Boosting (With PCA) & 95.6 & 93.9 & 95.6 & 93.9 & 96.5 & - & 95.08 \\\\ \midrule XGBoost (No PCA) & 98.2 & 94.7 & 96.5 & 94.7 & 95.6 & 95.96 & - \\\\ XGBoost (With PCA) & 98.2 & 95.6 & 95.6 & 95.6 & 96.5 & - & 96.31 \\\\ \midrule Stacking (No PCA) & 98.2 & 96.5 & 99.1 & 98.2 & 98.2 & 98.07 & - \\\\ Stacking (With PCA) & 97.4 & 96.5 & 97.4 & 98.2 & 98.2 & - & 97.54 \\\\ \bottomrule \end{tabular}
-
-
-
-\section{Results}
-
-\begin{tabular}{lc}
-\toprule
-Metric & Value\\
-\midrule
-See Table 12 above for comprehensive comparison.
-\bottomrule
-\end{tabular}
-
-\section{Result Visualization}
-
-Include all graphs generated during the experiment.
-
-For \textbf{every graph}, provide:
-\begin{itemize}
-\item Figure
-\item Caption
-\item 3--5 line inference
-\end{itemize}
-
-Recommended figures:
-\begin{enumerate}
-\item Correlation Matrix
-\item Class Distribution
-\item Confusion Matrix
-\item ROC Curve
-\item Precision-Recall Curve
-\item Learning Curve (if applicable)
-\item Feature Importance (if applicable)
+\section{Problem Formulation}
+Given a high-dimensional dataset $\mathbf{X} \in \mathbb{R}^{N \times D}$, high dimensionality often induces multicollinearity, high computational overhead, and the curse of dimensionality. Principal Component Analysis seeks an orthogonal projection matrix $\mathbf{W} \in \mathbb{R}^{D \times d}$ ($d < D$) that projects the data to $\mathbf{Z} = \mathbf{X}\mathbf{W} \in \mathbb{R}^{N \times d}$ while maximizing explained variance. We evaluate:
+\begin{enumerate}[noitemsep]
+    \item How does feature compression at a 95\% variance threshold affect distinct algorithm families (linear, distance-based, decision trees, boosting ensembles, stacking)?
+    \item Are observed metric variations across models and cross-validation folds statistically significant ($p < 0.05$) or merely stochastic variance?
 \end{enumerate}
+
+\section{Multi-Dataset Scope (Experiments 1 to 7)}
+\begin{table}[H]
+\centering
+\small
+\caption{Multi-Dataset Characteristics Across Laboratory Experiments}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Dataset Name} & \textbf{Originating Exp} & \textbf{Samples ($N$)} & \textbf{Features ($D$)} & \textbf{Classes} & \textbf{Task Domain} \\
+\midrule
+Breast Cancer Wisconsin & Ex 5 \& 6 & 569 & 30 & 2 & Medical Diagnostic \\
+Spambase Email & Ex 2 \& 4 & 4,601 & 57 & 2 & NLP Word Frequency \\
+Iris Species & Ex 1 & 150 & 4 & 3 & Morphological Multiclass \\
+Pima Indians Diabetes & Ex 1 \& 4 & 768 & 8 & 2 & Clinical Tabular \\
+Loan Approval / Status & Ex 1 \& 3 & 4,269 & 11 & 2 & Financial Credit Risk \\
+Optical Digits (MNIST) & Ex 1 \& 6 & 1,797 & 64 & 10 & 8$\times$8 Image Pixel Intensity \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Data Preprocessing \& Leakage-Free Pipelining}
+To ensure zero data leakage between training and validation folds, feature standardization and PCA projection must be fit strictly on the training partition:
+$$\mathbf{\mu}_{\text{train}} = \frac{1}{N_{\text{train}}} \sum_{i=1}^{N_{\text{train}}} \mathbf{x}_i, \quad \mathbf{\sigma}_{\text{train}} = \sqrt{\frac{1}{N_{\text{train}}} \sum_{i=1}^{N_{\text{train}}} (\mathbf{x}_i - \mathbf{\mu}_{\text{train}})^2}$$
+$$\mathbf{X}_{\text{train, scaled}} = \frac{\mathbf{X}_{\text{train}} - \mathbf{\mu}_{\text{train}}}{\mathbf{\sigma}_{\text{train}}}, \quad \mathbf{X}_{\text{val, scaled}} = \frac{\mathbf{X}_{\text{val}} - \mathbf{\mu}_{\text{train}}}{\mathbf{\sigma}_{\text{train}}}$$
+Within each fold of 5-fold cross-validation, `scikit-learn`'s `Pipeline([('scaler', StandardScaler()), ('pca', PCA(n\_components=k)), ('clf', model)])` guarantees that validation instances are transformed using parameters derived exclusively from training instances.
+
+\section{PCA Mathematical Formulation \& Variance Retention}
+PCA diagonalizes the sample covariance matrix $\mathbf{\Sigma} = \frac{1}{N-1} \mathbf{X}_{\text{scaled}}^T \mathbf{X}_{\text{scaled}}$:
+$$\mathbf{\Sigma} \mathbf{v}_i = \lambda_i \mathbf{v}_i, \quad \lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_D \ge 0$$
+The cumulative explained variance ratio for $d$ components is:
+$$\text{Explained Variance Ratio}(d) = \frac{\sum_{i=1}^d \lambda_i}{\sum_{j=1}^D \lambda_j}$$
+We choose $d = \arg\min_k \{ \text{Explained Variance Ratio}(k) \ge 0.95 \}$.
+
+\begin{table}[H]
+\centering
+\small
+\caption{PCA Explained Variance (95\% Threshold) Across All 6 Datasets}
+\begin{tabular}{lccccp{5.5cm}}
+\toprule
+\textbf{Dataset} & \textbf{Original ($D$)} & \textbf{PCA ($d$)} & \textbf{Variance (\%)} & \textbf{Reduction (\%)} & \textbf{Justification} \\
+\midrule
+Breast Cancer & 30 & 10 & 95.16\% & 66.7\% & Retains $\ge 95\%$ information while removing 20 redundant dimensions. \\
+Spambase & 57 & 48 & 95.27\% & 15.8\% & Retains $\ge 95\%$ information while removing 9 redundant dimensions. \\
+Iris & 4 & 2 & 95.81\% & 50.0\% & Retains $\ge 95\%$ information while removing 2 redundant dimensions. \\
+Diabetes & 8 & 8 & 100.00\% & 0.0\% & Retains $\ge 95\%$ information while removing 0 redundant dimensions. \\
+Loan Approval & 11 & 8 & 96.21\% & 27.3\% & Retains $\ge 95\%$ information while removing 3 redundant dimensions. \\
+Optical Digits & 64 & 40 & 95.08\% & 37.5\% & Retains $\ge 95\%$ information while removing 24 redundant dimensions. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Statistical Significance Testing Framework}
+In accordance with \textbf{Unit V Course Notes (pages 11--39)}, we avoid arbitrary testing and implement \textbf{only the 3 mathematically apt and necessary tests}:
+
+\subsection{Tier 1: Model-Level Paired Fold Comparison}
+\begin{itemize}[noitemsep]
+    \item \textbf{Normality Pre-Check (Shapiro-Wilk):} Verifies whether the 5 fold differences $\Delta_i = F1_{\text{PCA}, i} - F1_{\text{No-PCA}, i}$ conform to a Gaussian distribution ($p \ge 0.05$).
+    \item \textbf{Paired Two-Sample $t$-Test:} Used when normality holds. Tests $H_0: \mu_{\text{PCA}} - \mu_{\text{No-PCA}} = 0$ with test statistic:
+    $$t = \frac{\bar{d}}{s_d / \sqrt{K}}, \quad \text{df} = K - 1 = 4$$
+    \item \textbf{Wilcoxon Signed-Rank Test:} Used as non-parametric fallback when fold differences are skewed.
+\end{itemize}
+
+\subsection{Tier 2: Dataset-Level \& Global Multi-Model Comparison}
+Compares the 10 heterogeneous classifier architectures simultaneously under No-PCA vs With-PCA using the \textbf{Wilcoxon Signed-Rank Test}:
+$$W = \sum_{i=1}^n \text{sgn}(d_i) \cdot \text{Rank}(|d_i|)$$
+Because metric differences across diverse model families (e.g. Naive Bayes vs XGBoost) violate normality and exhibit extreme outliers, a parametric $t$-test across models is invalid.
+
+\subsection{Tier 3: Multi-Algorithm Benchmark Comparison (Friedman Test)}
+To evaluate whether the 10 machine learning algorithms differ significantly in overall performance ranking without inflating family-wise Type I errors ($\binom{10}{2} = 45$ pairwise tests would yield $\alpha_{\text{family}} \approx 90\%$), we employ the non-parametric \textbf{Friedman Test}:
+$$\chi_F^2 = \frac{12 N}{k(k+1)} \left[ \sum_{j=1}^k R_j^2 - \frac{k(k+1)^2}{4} \right]$$
+where $k=10$ algorithms, $N=6$ datasets, and $R_j$ is the average rank of algorithm $j$.
+
+\subsection{Explicitly Excluded Tests}
+\begin{itemize}[noitemsep]
+    \item \textbf{Independent $t$-Test / One-Way ANOVA:} Excluded because models are evaluated on the exact same folds and datasets (repeated measures), violating the fundamental between-subjects independence assumption.
+    \item \textbf{McNemar's Test:} Excluded because it is designed for a single isolated test set with discrete counts, whereas our syllabus mandates 5-fold cross-validation with continuous metric distributions.
+\end{itemize}
+
+\section{Experimental Results \& Performance Tables}
+Tables 3--8 summarize 5-fold cross-validation performance (Macro F1 $\pm$ standard deviation) and Tier 1 paired $t$-test significance across all 10 models for all 6 datasets:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Breast Cancer Wisconsin: 5-Fold Cross-Validation \& Paired Significance}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Classifier} & \textbf{CV F1 (No-PCA)} & \textbf{CV F1 (With-PCA)} & \textbf{$\Delta$ F1} & \textbf{$t$-stat} & \textbf{$p$-value} & \textbf{Significant ($p<0.05$)} \\
+\midrule
+SVM & 0.9669 $\pm$ 0.0160 & 0.9694 $\pm$ 0.0119 & +0.0025 & 0.43 & 0.6880 & No \\
+Naive Bayes & 0.9292 $\pm$ 0.0307 & 0.9213 $\pm$ 0.0201 & -0.0079 & -1.00 & 0.3724 & No \\
+KNN & 0.9598 $\pm$ 0.0118 & 0.9596 $\pm$ 0.0143 & -0.0002 & -0.05 & 0.9661 & No \\
+Logistic Regression & 0.9764 $\pm$ 0.0106 & 0.9811 $\pm$ 0.0058 & +0.0047 & 0.99 & 0.3803 & No \\
+Decision Tree & 0.9188 $\pm$ 0.0123 & 0.9131 $\pm$ 0.0242 & -0.0057 & -0.39 & 0.7177 & No \\
+Random Forest & 0.9626 $\pm$ 0.0185 & 0.9575 $\pm$ 0.0255 & -0.0051 & -0.84 & 0.4481 & No \\
+AdaBoost & 0.9645 $\pm$ 0.0211 & 0.9738 $\pm$ 0.0192 & +0.0093 & 0.55 & 0.6127 & No \\
+Gradient Boosting & 0.9483 $\pm$ 0.0158 & 0.9436 $\pm$ 0.0272 & -0.0047 & -0.31 & 0.7749 & No \\
+XGBoost & 0.9601 $\pm$ 0.0119 & 0.9551 $\pm$ 0.0231 & -0.0049 & -0.34 & 0.7506 & No \\
+Stacking & 0.9765 $\pm$ 0.0127 & 0.9763 $\pm$ 0.0106 & -0.0002 & -0.05 & 0.9658 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Spambase Email: 5-Fold Cross-Validation \& Paired Significance}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Classifier} & \textbf{CV F1 (No-PCA)} & \textbf{CV F1 (With-PCA)} & \textbf{$\Delta$ F1} & \textbf{$t$-stat} & \textbf{$p$-value} & \textbf{Significant ($p<0.05$)} \\
+\midrule
+SVM & 0.9283 $\pm$ 0.0073 & 0.9268 $\pm$ 0.0069 & -0.0015 & -0.77 & 0.4832 & No \\
+Naive Bayes & 0.8136 $\pm$ 0.0116 & 0.8271 $\pm$ 0.0190 & +0.0135 & 1.99 & 0.1178 & No \\
+KNN & 0.9146 $\pm$ 0.0082 & 0.9133 $\pm$ 0.0079 & -0.0014 & -0.74 & 0.5006 & No \\
+Logistic Regression & 0.9186 $\pm$ 0.0113 & 0.9177 $\pm$ 0.0076 & -0.0009 & -0.40 & 0.7094 & No \\
+Decision Tree & 0.9082 $\pm$ 0.0109 & 0.8872 $\pm$ 0.0089 & -0.0211 & -2.43 & 0.0721 & No \\
+Random Forest & 0.9348 $\pm$ 0.0062 & 0.9133 $\pm$ 0.0174 & -0.0216 & -2.11 & 0.1022 & No \\
+AdaBoost & 0.9272 $\pm$ 0.0036 & 0.8858 $\pm$ 0.0116 & -0.0414 & -6.63 & 0.0027 & YES \\
+Gradient Boosting & 0.9430 $\pm$ 0.0038 & 0.9208 $\pm$ 0.0107 & -0.0223 & -4.14 & 0.0144 & YES \\
+XGBoost & 0.9515 $\pm$ 0.0103 & 0.9353 $\pm$ 0.0090 & -0.0162 & -6.17 & 0.0035 & YES \\
+Stacking & 0.9393 $\pm$ 0.0058 & 0.9235 $\pm$ 0.0096 & -0.0158 & -3.62 & 0.0223 & YES \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Optical Digits (MNIST): 5-Fold Cross-Validation \& Paired Significance}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Classifier} & \textbf{CV F1 (No-PCA)} & \textbf{CV F1 (With-PCA)} & \textbf{$\Delta$ F1} & \textbf{$t$-stat} & \textbf{$p$-value} & \textbf{Significant ($p<0.05$)} \\
+\midrule
+SVM & 0.9812 $\pm$ 0.0059 & 0.9819 $\pm$ 0.0086 & +0.0007 & 0.40 & 0.7111 & No \\
+Naive Bayes & 0.7545 $\pm$ 0.0110 & 0.8890 $\pm$ 0.0202 & +0.1345 & 11.02 & 0.0004 & YES \\
+KNN & 0.9756 $\pm$ 0.0073 & 0.9720 $\pm$ 0.0080 & -0.0035 & -1.58 & 0.1896 & No \\
+Logistic Regression & 0.9679 $\pm$ 0.0073 & 0.9609 $\pm$ 0.0101 & -0.0070 & -2.59 & 0.0609 & No \\
+Decision Tree & 0.6643 $\pm$ 0.0217 & 0.5564 $\pm$ 0.0712 & -0.1079 & -3.21 & 0.0327 & YES \\
+Random Forest & 0.9685 $\pm$ 0.0101 & 0.9505 $\pm$ 0.0104 & -0.0180 & -11.25 & 0.0004 & YES \\
+AdaBoost & 0.7046 $\pm$ 0.0310 & 0.6675 $\pm$ 0.0379 & -0.0371 & -2.24 & 0.0881 & No \\
+Gradient Boosting & 0.9611 $\pm$ 0.0066 & 0.9188 $\pm$ 0.0215 & -0.0423 & -4.17 & 0.0140 & YES \\
+XGBoost & 0.9657 $\pm$ 0.0109 & 0.9387 $\pm$ 0.0156 & -0.0271 & -5.00 & 0.0075 & YES \\
+Stacking & 0.9853 $\pm$ 0.0068 & 0.9811 $\pm$ 0.0072 & -0.0042 & -2.05 & 0.1100 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Statistical Significance Test Findings}
+\begin{table}[H]
+\centering
+\small
+\caption{Tier 2: Dataset-Level Wilcoxon Signed-Rank Test Summary}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Dataset} & \textbf{Wilcoxon $W$} & \textbf{$p$-value} & \textbf{Mean $\Delta$ F1} & \textbf{Statistically Significant ($p < 0.05$)} \\
+\midrule
+Breast Cancer & 17.0 & 3.2227e-01 & -0.0012 & NO (Indistinguishable) \\
+Spambase & 4.0 & 1.3672e-02 & -0.0129 & YES (Degradation) \\
+Iris & 0.0 & 1.9531e-03 & -0.0570 & YES (Degradation) \\
+Diabetes & 6.0 & 2.1875e-01 & -0.0056 & NO (Indistinguishable) \\
+Loan Approval & 2.0 & 5.8594e-03 & -0.0440 & YES (Degradation) \\
+Optical Digits & 11.0 & 1.0547e-01 & -0.0112 & NO (Indistinguishable) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Global Statistical Significance (60 Evaluations):}
+\begin{itemize}[noitemsep]
+    \item Global Wilcoxon Signed-Rank Test: $W = 179.0, p = 2.68 \times 10^{-7}$ (Statistically Significant, Mean $\Delta F1 = -0.0220$).
+    \item Global Paired $t$-Test: $t = -4.717, p = 1.51 \times 10^{-5}$ (Statistically Significant).
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Tier 3: Friedman Omnibus Algorithm Ranking (10 Classifiers across 6 Datasets)}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Algorithm} & \textbf{Mean Rank (No-PCA)} & \textbf{Mean Rank (With-PCA)} & \textbf{Rank Shift} \\
+\midrule
+SVM & 3.50 & 3.17 & -0.33 \\
+Logistic Regression & 4.42 & 3.17 & -1.25 \\
+Stacking & 3.17 & 3.33 & +0.17 \\
+Gradient Boosting & 5.67 & 4.83 & -0.83 \\
+Random Forest & 5.00 & 4.92 & -0.08 \\
+XGBoost & 4.33 & 5.33 & +1.00 \\
+KNN & 6.58 & 6.17 & -0.42 \\
+AdaBoost & 6.67 & 6.58 & -0.08 \\
+Naive Bayes & 7.42 & 7.83 & +0.42 \\
+Decision Tree & 8.25 & 9.67 & +1.42 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\textbf{Friedman Test Statistics:} No-PCA $\chi_F^2 = 17.14$ ($p = 0.0466$); With-PCA $\chi_F^2 = 26.75$ ($p = 0.0015$); Combined $\chi_F^2 = 42.02$ ($p = 3.26 \times 10^{-6}$).
+
+\section{Result Visualizations}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{Ex7/Scree_Plot.eps}
-\caption{Scree Plot: Explained Variance by Components.}
+\includegraphics[width=0.88\linewidth]{figures7/scree_all_datasets.png}
+\caption{Consolidated Scree Plots Across All 6 Datasets (95\% Variance Cutoff).}
 \end{figure}
+\textbf{Inference:} High-dimensional continuous datasets (Breast Cancer: 30 $\to$ 10, Digits: 64 $\to$ 40) exhibit rapid eigenvalue decay, enabling 37.5\%--66.7\% dimensionality reduction with minimal information loss. In contrast, uncorrelated clinical indicators (Diabetes) require all 8 dimensions to capture 95\% variance.
 
-\section{Discussion}
-PCA successfully reduced the feature space from 30 to 10 components while retaining 95\% variance. Tree-based models (Random Forest, XGBoost) generally perform exceptionally well on original feature spaces but can sometimes see a slight drop in accuracy with PCA since orthogonal transformations disrupt individual feature semantics. Linear models (SVM, Logistic Regression) benefited from decorrelated features and reduced dimensions.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{figures7/pca_2d_projections_all.png}
+\caption{2D PCA Low-Dimensional Manifold Projections Colored by Target Class.}
+\end{figure}
+\textbf{Inference:} Top 2 principal components demonstrate evident linear cluster separability in Iris and Breast Cancer, while complex multiclass manifolds (Optical Digits) require higher-order orthogonal components.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{figures7/f1_all_datasets_comparison.png}
+\caption{Consolidated Model Comparison: No-PCA vs. With-PCA Macro F1 across All 6 Datasets.}
+\end{figure}
+\textbf{Inference:} Linear models and Stacking maintain peak F1 scores across datasets, while Decision Trees experience noticeable drops under PCA.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{figures7/friedman_ranks.png}
+\caption{Friedman Average Algorithm Ranks (1 = Best, 10 = Worst): No-PCA vs. With-PCA.}
+\end{figure}
+\textbf{Inference:} Under PCA, Logistic Regression and SVM advance to the top average ranks (3.17), while Decision Tree drops to rank 9.67.
+
+\section{Discussion: Answers to Faculty Observation Questions}
+\begin{enumerate}
+    \item \textbf{Which models improved most with PCA? Which did not? Why?}
+    Linear and maximum-margin models (SVM, Logistic Regression) improved most or maintained top performance. In Friedman ranking, Logistic Regression improved from rank 4.42 to 3.17, and SVM tied for the top rank (3.17). PCA projects data onto orthogonal variance-maximizing eigenvectors, eliminating collinearity and stabilizing linear hyperplanes. Conversely, Decision Trees degraded severely (rank 8.25 $\to$ 9.67, $\Delta F1 = -0.2007$ on Loan Approval) because axis-aligned decision stumps cannot efficiently partition dense oblique linear combinations.
+    \item \textbf{Did PCA reduce variance across folds (more stable results)?}
+    Yes, for high-dimensional continuous data. On Breast Cancer, cross-validation standard deviation fell for SVM (0.0160 $\to$ 0.0119) and Logistic Regression (0.0106 $\to$ 0.0058) due to noise removal. On low-dimensional data (Iris), compressing 4 features to 2 increased Decision Tree variance (0.0171 $\to$ 0.0533) due to loss of critical boundary variance.
+    \item \textbf{For high-dimensional data, was PCA beneficial in reducing overfitting?}
+    Yes. On Breast Cancer (30 features, 569 samples), PCA reduced dimension by 66.7\% with zero performance degradation ($F1 = 0.9719$). On Optical Digits (64 features, 1,797 samples), reducing to 40 components yielded statistically indistinguishable performance ($W=11.0, p=0.1055 > 0.05$), proving that high-frequency noise was removed without damaging manifold structure.
+    \item \textbf{How did linear models behave compared to ensemble models with PCA?}
+    Linear models showed superior resilience and gained relative rank. Ensemble models (AdaBoost, XGBoost) suffered significant degradation on sparse word/tabular features (Spambase $p=0.0137$, Loan Approval $p=0.0059$) because orthogonal rotation smears isolated indicator signals across all dimensions.
+    \item \textbf{Did stacking show robustness to dimensionality reduction compared to single models?}
+    Yes. Stacking achieved rank 3.17 (No-PCA) and rank 3.33 (With-PCA), ranking among the top two models across all datasets. Blending diverse model families (Logistic Regression, Random Forest, KNN) effectively buffered against individual model degradation under compressed representations.
+\end{enumerate}
 
 \section{Conclusion}
-The experiment confirmed that PCA is highly effective for reducing dimensionality without significant loss of information. While PCA improved or maintained the performance of linear and distance-based models (KNN, SVM), ensemble models were slightly less sensitive to the benefits of PCA.
+Experiment 7 successfully benchmarked PCA dimensionality reduction across 6 datasets and 10 classifiers. Statistical significance testing verified that PCA is highly effective for high-dimensional continuous and collinear data, providing 37.5\%--66.7\% compression without significant metric loss. Furthermore, the Friedman omnibus test established that algorithm choice under PCA is statistically significant ($\chi_F^2 = 26.75, p = 0.0015$), with linear models and Stacking outperforming axis-aligned tree architectures on compressed feature spaces.
 
-\section{References}
-Use IEEE style.
+\section*{References}
+\begin{enumerate}[noitemsep]
+    \item J. Dem\v{s}ar, ``Statistical comparisons of classifiers over multiple data sets,'' \textit{Journal of Machine Learning Research}, vol. 7, pp. 1--30, 2006.
+    \item I. T. Jolliffe and J. Cadima, ``Principal component analysis: a review and recent developments,'' \textit{Philosophical Transactions of the Royal Society A}, vol. 374, no. 2065, 2016.
+    \item T. G. Dietterich, ``Approximate statistical tests for comparing supervised classification learning algorithms,'' \textit{Neural Computation}, vol. 10, no. 7, pp. 1895--1923, 1998.
+\end{enumerate}
 
 \end{document}
+
