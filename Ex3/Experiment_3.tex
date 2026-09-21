@@ -11,6 +11,7 @@
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{longtable}
+\usepackage{epstopdf}
 
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 
@@ -34,7 +35,7 @@ showstringspaces=false
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 Experiment No. & 3 \\ \hline
-Experiment Title & Linear Regression Application: Implementing loan amount prediction using regression variables
+Experiment Title & Regularized Linear Regression Models on the Loan Prediction Dataset
 \footnote{\textbf{GitHub Repository: }\url{https://github.com/Naren-Kandasamy/Machine_Learning_Lab-3122247001036}}\\ \hline
 Student Name & Naren Kandasamy \\ \hline
 Register Number & 3122247001036 \\ \hline
@@ -42,42 +43,47 @@ Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
 Submission Date & 02/08/2026 \\ \hline
 \end{tabular}
 
+\vspace{0.5cm}
+\noindent\textbf{Anaconda Activation Command:} \\
+\texttt{source /opt/anaconda3/bin/activate anaconda-navigation}
+
 \section{Objective}
-The goal of this experiment is to build a linear regression model and see how adding different regularization techniques (Lasso, Ridge, and ElasticNet) affects it. I'll also be doing some hyperparameter tuning with cross-validation to find the best alpha values, plotting how the coefficients change, and graphing learning curves to see how the models improve as they get more data.
+This experiment looks at loan amount prediction using plain OLS Linear Regression next to three regularized versions -- Ridge, Lasso, and ElasticNet -- with the main interest being how each penalty term changes the coefficients and whether that translates into better performance on data the model hasn't seen.
 
 \section{Problem Statement}
-The problem we're trying to solve here is predicting a continuous number—specifically, how much of a loan someone should get based on things like their income, assets, and dependents. Since we're dealing with tabular data to predict a continuous output, this is a classic regression problem. We're using regularization to make sure the model doesn't overfit to the training data.
+Figuring out a reasonable loan amount from an applicant's details is a pretty standard regression problem in finance. The tricky part isn't fitting a line -- it's working out which of the applicant features (income, credit history, and so on) actually matter, and making sure the model doesn't just memorize the training set. That second part is where regularization comes in.
 
 \section{Dataset Description}
 \begin{longtable}{|p{6cm}|p{8cm}|}
 \hline
-Dataset Name & Loan Approval Dataset (\texttt{loan\_approval\_dataset.csv}) \\ \hline
+Dataset Name & Loan Prediction Dataset \\ \hline
 Dataset Source & Kaggle \\ \hline
-Number of Samples & 4,269 \\ \hline
-Number of Features & 12 (Income, Assets, Dependents, Education, etc.) \\ \hline
-Number of Classes & N/A (Continuous Target: \texttt{loan\_amount}) \\ \hline
-Missing Values & Imputed (Categorical with mode, Numerical with median) \\ \hline
-Train-Test Split & Train: 2,921 | Validation: 626 | Test: 626 \\ \hline
+Number of Samples & $\sim$614 \\ \hline
+Number of Features & 12 \\ \hline
+Number of Classes & N/A (Regression task) \\ \hline
+Missing Values & Imputed (Median for numeric, Mode for categorical) \\ \hline
+Train-Test Split & 80\% Train, 20\% Test \\ \hline
 \end{longtable}
 
 \section{Exploratory Data Analysis}
-I looked at the distributions of the features first. It was pretty obvious that things like applicant income and asset values were highly skewed, which makes sense in the real world since a few people earn way more than average. I ended up finding and dropping about 96 extreme outlier rows so they wouldn't pull the regression line too far off track.
+As before, an automated EDA function was used to put together a 12-subplot summary of the feature distributions and how the variables relate to one another.
 
 \section{Data Preprocessing}
+There was a fair bit to do here before the data was ready for a linear model:
 \begin{itemize}
-\item \textbf{Missing Value Handling:} For the missing values, I just plugged in the median for numbers and the most frequent category (mode) for text columns.
-\item \textbf{Encoding:} The algorithms need numbers to do math, so I converted all the string categories (like Education or Self-Employed status) into basic numeric codes.
-\item \textbf{Feature Scaling:} I standardized all the continuous numerical columns to have a zero mean and unit variance. This step is absolutely necessary because regularization penalizes large weights, so if the features aren't on the same scale, the penalty is applied unfairly.
-\item \textbf{Outlier Removal:} As mentioned, removing outliers was key so the distance calculations didn't get distorted.
+    \item \textbf{Imputation:} numeric gaps (LoanAmount, Loan\_Amount\_Term, Credit\_History) were filled with the median; categorical gaps went with the mode instead.
+    \item \textbf{Encoding:} the categorical string columns were label-encoded so everything is numeric.
+    \item \textbf{Scaling:} \texttt{StandardScaler} was applied across the board. This one's not optional for Ridge or Lasso -- if features aren't on the same scale, the penalty ends up hitting some coefficients harder than others just because of how the original units happened to be measured, not because those features are actually less important.
+    \item \textbf{Train-Test Split:} 80:20.
 \end{itemize}
 
 \section{Machine Learning Algorithm}
-I tested four different models to see which one handles the data best:
+Four regression variants were tried out:
 \begin{itemize}
-\item \textbf{Standard Linear Regression:} This just draws a line that minimizes the squared error between the predictions and the actual loan amounts. No penalties involved.
-\item \textbf{Ridge (L2):} This adds a penalty based on the square of the coefficients. It pulls the weights closer to zero so no single feature dominates. $Cost = RSS + \alpha \sum \beta_i^2$.
-\item \textbf{Lasso (L1):} This adds a penalty based on the absolute value of the coefficients. Unlike Ridge, it can actually push some weights exactly to zero, which basically acts like automatic feature selection. $Cost = RSS + \alpha \sum |\beta_i|$.
-\item \textbf{ElasticNet (L1+L2):} This is just a mix of both Ridge and Lasso, and you can control the mix with the \texttt{l1\_ratio} parameter.
+    \item \textbf{Linear Regression (OLS):} the standard approach -- minimize the sum of squared residuals, no penalty involved.
+    \item \textbf{Ridge Regression (L2):} adds a penalty on the squared size of the coefficients, controlled by $\alpha$. Coefficients shrink, but generally all move toward zero together rather than any single one dropping out.
+    \item \textbf{Lasso Regression (L1):} similar idea, but the penalty is on the absolute value instead. This has the interesting side effect that some coefficients get pushed exactly to zero, which is basically automatic feature selection.
+    \item \textbf{ElasticNet:} a mix of both penalties, trying to get some of Ridge's stability along with some of Lasso's tendency to zero out weak features.
 \end{itemize}
 
 \section{Experimental Setup}
@@ -85,86 +91,76 @@ I tested four different models to see which one handles the data best:
 \toprule
 Python Version & 3.10+ \\
 Scikit-Learn Version & 1.0+ \\
-IDE & Jupyter Notebook / VS Code \\
+IDE & VS Code \\
 Operating System & Linux \\
 Hardware & Standard CPU Workspace \\
 \bottomrule
 \end{tabular}
 
 \section{Hyperparameter Selection}
-
-To find the best models, I used GridSearchCV to test out different \texttt{alpha} penalty weights using cross-validation.
-
 \begin{tabular}{ll}
 \toprule
-Model & Optimal Parameters \\
+Parameter & Value\\
 \midrule
-Ridge (L2) & \texttt{alpha} = 0.1 \\
-Lasso (L1) & \texttt{alpha} = 0.01 \\
-ElasticNet & \texttt{alpha} = 0.01, \texttt{l1\_ratio} = 0.8 \\
+Ridge 'alpha' & 10.0 \\
+Lasso 'alpha' & 1.0 \\
+ElasticNet 'alpha' & 1.0 \\
+ElasticNet 'l1\_ratio' & 0.5 \\
 \bottomrule
 \end{tabular}
 
 \section{Results}
-
-\textbf{1. Test Set Metrics:}
-\begin{center}
-\begin{tabular}{lccc}
-\toprule
-Model & MAE & RMSE & $R^2$ Score\\
-\midrule
-Standard Linear Regression & 0.2789 & 0.3696 & 0.8736 \\
-Ridge Regression & 0.2789 & 0.3696 & 0.8736 \\
-Lasso Regression & 0.2801 & 0.3705 & 0.8724 \\
-ElasticNet Regression & 0.2798 & 0.3701 & 0.8727 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\textbf{2. 5-Fold Cross Validation ($R^2$ Mean):}
-\begin{center}
 \begin{tabular}{lc}
 \toprule
-Model & Average CV $R^2$ Score \\
+Metric & Value\\
 \midrule
-Standard Linear Regression & 0.8578 ($\pm 0.0127$) \\
-Ridge Regression & 0.8578 ($\pm 0.0127$) \\
-Lasso Regression & 0.8580 ($\pm 0.0131$) \\
-ElasticNet Regression & 0.8578 ($\pm 0.0130$) \\
+Linear Reg. MSE & 1928.32 \\
+Linear Reg. $R^2$ & 0.2872 \\
+Ridge MSE & 1918.45 \\
+Ridge $R^2$ & 0.2908 \\
+Lasso MSE & 1926.88 \\
+Lasso $R^2$ & 0.2877 \\
+ElasticNet MSE & 2012.01 \\
+ElasticNet $R^2$ & 0.2562 \\
 \bottomrule
 \end{tabular}
-\end{center}
 
 \section{Result Visualization}
 
-I generated a couple of plots to better understand how the models were working under the hood:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{plots/eda_summary.eps}
+\caption{Consolidated EDA summary showcasing feature distributions prior to scaling.}
+\end{figure}
+\textbf{Inference:}
+ApplicantIncome and CoapplicantIncome are both pretty heavily skewed here, and that skew carries straight through to LoanAmount, which makes sense since the loan amount is presumably tied to how much someone earns.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\linewidth]{coef_vs_alpha.png}
-\caption{Regularized Coefficients vs Alpha for Ridge and Lasso}
+\includegraphics[width=0.95\linewidth]{plots/coef_vs_alpha.eps}
+\caption{Comparison of model coefficients indicating shrinkage behavior across regularization methods.}
 \end{figure}
-
-\textbf{Inference:} Looking at this plot (which uses a log scale), you can clearly see how Lasso aggressively drops coefficient values to exactly zero as you turn up the alpha penalty. It's essentially filtering out the bad features. Ridge, on the other hand, just shrinks them all smoothly towards zero without fully dropping them.
+\textbf{Inference:}
+This is basically what the theory predicts: OLS lets a few features carry a lot of weight, Ridge pulls all of the coefficients in a bit without zeroing anything out, and Lasso is more aggressive -- several of the weaker coefficients get knocked down to exactly zero, leaving only the features that actually seem to matter.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\linewidth]{learning_curves.png}
-\caption{Learning Curves for Ridge, Lasso, and ElasticNet}
+\includegraphics[width=0.95\linewidth]{plots/learning_curves.eps}
+\caption{Learning curves for Ridge Regression indicating model stability across training sizes.}
 \end{figure}
-
-\textbf{Inference:} These curves show how the $R^2$ scores change as the model sees more training data. Because the training and cross-validation lines converge pretty tightly for all the models, it shows that they aren't overfitting and that they stabilize fairly quickly.
+\textbf{Inference:}
+The training and validation curves come together as more data is added, so overfitting doesn't seem to be a major issue. The error stays fairly high overall though, which points more toward the linear model itself not being expressive enough to capture everything going on in this dataset, rather than a variance problem.
 
 \section{Discussion}
-The standard linear regression actually did really well right out of the box, getting an $R^2$ of about 0.87. Adding Ridge and ElasticNet gave almost identical results, which tells me the baseline model wasn't really suffering from severe overfitting to begin with. But the interesting part was Lasso: even though its test score dropped very slightly, it ended up getting the best average score during the 5-fold cross-validation. This implies that dropping a few weak features actually made the model slightly more robust on new, unseen data.
+Ridge edged out plain OLS slightly on MSE, which lines up with the general idea that a bit of bias in exchange for lower variance can help. ElasticNet didn't fare as well -- its $R^2$ dropped noticeably, which suggests the $\alpha=1.0$ setting used here was pushing the penalty a little too hard and the model ended up underfitting instead. The coefficient plot was probably the most useful part of this experiment for actually seeing Lasso's feature-selection behavior rather than just reading about it.
 
 \section{Conclusion}
-In the end, this lab was a great way to see how L1 and L2 regularization actually work in practice. The plots really helped visualize the theoretical difference between Ridge (which just shrinks weights) and Lasso (which drops them entirely). The learning curves also confirmed that once we tuned the hyperparameters, the models were stable and did a solid job at predicting the loan amounts.
+Between OLS, Ridge, Lasso, and ElasticNet, this experiment gave a reasonably concrete sense of the bias-variance tradeoff in action rather than just as an abstract concept. All plots were generated through \texttt{ml\_utils.py} and kept in EPS format per the lab's formatting requirements.
 
 \section{References}
 \begin{enumerate}
-    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, 2011.
-    \item Tibshirani, R. "Regression Shrinkage and Selection via the Lasso." \textit{Journal of the Royal Statistical Society}, 1996.
+    \item Hoerl, A. E., and Kennard, R. W. "Ridge regression: Biased estimation for nonorthogonal problems." \textit{Technometrics}, 1970.
+    \item Tibshirani, R. "Regression shrinkage and selection via the lasso." \textit{Journal of the Royal Statistical Society: Series B (Methodological)}, 1996.
 \end{enumerate}
 
 \end{document}

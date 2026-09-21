@@ -1,0 +1,82 @@
+{
+  "ab_comparison": [
+    {
+      "Model": "Single-Layer Perceptron (PLA)",
+      "Architecture": "Single Layer (OvR 62 Step Units)",
+      "Accuracy": 12.61,
+      "Precision": 26.73,
+      "Recall": 12.61,
+      "F1-Score": 11.53,
+      "Training Time (s)": 15.09
+    },
+    {
+      "Model": "Tuned Multilayer Perceptron (MLP)",
+      "Architecture": "Input(784) -> (256, 128) -> Output(62)",
+      "Accuracy": 41.35,
+      "Precision": 43.98,
+      "Recall": 41.35,
+      "F1-Score": 40.65,
+      "Training Time (s)": 20.26
+    }
+  ],
+  "tuning_results": [
+    {
+      "Configuration": "Hidden: (64,), Act: relu, Opt: adam, LR: 0.001",
+      "Hidden Layers": "(64,)",
+      "Activation": "relu",
+      "Optimizer": "adam",
+      "Learning Rate": 0.001,
+      "Validation Accuracy": 1.47,
+      "Time (s)": 2.05
+    },
+    {
+      "Configuration": "Hidden: (128, 64), Act: relu, Opt: adam, LR: 0.001",
+      "Hidden Layers": "(128, 64)",
+      "Activation": "relu",
+      "Optimizer": "adam",
+      "Learning Rate": 0.001,
+      "Validation Accuracy": 29.85,
+      "Time (s)": 9.83
+    },
+    {
+      "Configuration": "Hidden: (128, 64), Act: tanh, Opt: adam, LR: 0.001",
+      "Hidden Layers": "(128, 64)",
+      "Activation": "tanh",
+      "Optimizer": "adam",
+      "Learning Rate": 0.001,
+      "Validation Accuracy": 29.12,
+      "Time (s)": 7.72
+    },
+    {
+      "Configuration": "Hidden: (128, 64), Act: relu, Opt: sgd, LR: 0.01",
+      "Hidden Layers": "(128, 64)",
+      "Activation": "relu",
+      "Optimizer": "sgd",
+      "Learning Rate": 0.01,
+      "Validation Accuracy": 17.95,
+      "Time (s)": 5.56
+    },
+    {
+      "Configuration": "Hidden: (256, 128), Act: relu, Opt: adam, LR: 0.001",
+      "Hidden Layers": "(256, 128)",
+      "Activation": "relu",
+      "Optimizer": "adam",
+      "Learning Rate": 0.001,
+      "Validation Accuracy": 34.8,
+      "Time (s)": 15.77
+    }
+  ],
+  "best_config": {
+    "hidden_layer_sizes": "(256, 128)",
+    "activation": "relu",
+    "optimizer": "adam",
+    "lr": "0.001",
+    "batch_size": "64"
+  },
+  "roc_auc": {
+    "micro": 0.9318,
+    "macro": 0.9386
+  },
+  "pla_error_final": 0.0237,
+  "mlp_loss_final": 1.6797
+}

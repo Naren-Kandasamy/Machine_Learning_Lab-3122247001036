@@ -1,0 +1,64 @@
+{
+  "metrics": {
+    "Bagging": {
+      "Accuracy": 0.9649122807017544,
+      "Precision": 0.958904109589041,
+      "Recall": 0.9859154929577465,
+      "F1": 0.9722222222222222,
+      "AUC": 0.9932852931542744
+    },
+    "AdaBoost": {
+      "Accuracy": 0.9649122807017544,
+      "Precision": 0.958904109589041,
+      "Recall": 0.9859154929577465,
+      "F1": 0.9722222222222222,
+      "AUC": 0.9921388797903702
+    },
+    "Gradient Boosting": {
+      "Accuracy": 0.956140350877193,
+      "Precision": 0.9583333333333334,
+      "Recall": 0.971830985915493,
+      "F1": 0.965034965034965,
+      "AUC": 0.9954143465443825
+    },
+    "Stacked Ensemble": {
+      "Accuracy": 0.9649122807017544,
+      "Precision": 0.958904109589041,
+      "Recall": 0.9859154929577465,
+      "F1": 0.9722222222222222,
+      "AUC": 0.9957418932197838
+    }
+  },
+  "cv_metrics": {
+    "Bagging": {
+      "CV_Accuracy": 0.9613414066138798,
+      "CV_F1": 0.9695575278152937
+    },
+    "AdaBoost": {
+      "CV_Accuracy": 0.9701133364384413,
+      "CV_F1": 0.9764749618197894
+    },
+    "Gradient Boosting": {
+      "CV_Accuracy": 0.9543083372147182,
+      "CV_F1": 0.9639799843603398
+    },
+    "Stacked Ensemble": {
+      "CV_Accuracy": 0.9701133364384411,
+      "CV_F1": 0.9763012027096535
+    }
+  },
+  "bagging_best": {
+    "max_features": 0.5,
+    "max_samples": 0.8,
+    "n_estimators": 50
+  },
+  "adaboost_best": {
+    "learning_rate": 1.0,
+    "n_estimators": 50
+  },
+  "gb_best": {
+    "learning_rate": 0.1,
+    "max_depth": 3,
+    "n_estimators": 50
+  }
+}

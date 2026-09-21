@@ -1,24 +1,68 @@
-# Python testing and fixing scripts
-*output.txt
-custom_*_out.txt
-run_custom_*.py
-ex4_phase*.py
-fix_*.py
+# ==============================================================================
+# Datasets and Archives (Exclude raw data, extracted folders, and archives)
+# ==============================================================================
+Datasets/
+*.zip
+*.tar.gz
+*.csv
+*.txt
+!requirements.txt
+
+# ==============================================================================
+# LaTeX Auxiliary and Build Artifacts
+# ==============================================================================
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*-eps-converted-to.pdf
+
+# ==============================================================================
+# Python Scratch, Patching, and Testing Scripts
+# ==============================================================================
+append_*.py
 patch_*.py
+fix_*.py
+ex4_phase*.py
 phase*_modify.py
-extract.py
+run_custom_*.py
+custom_*_out.txt
+*output.txt
+full_nb_out.txt
+nb_out_start.txt
+extract*.py
+gen_test.py
+test_*.py
+sync_ipynb.py
+update_exp5_latex*.py
+ex5_no_gui.py
+run_ex*_standalone.py
 ML_Lab_ex2*.py
 run_ex2_only.py
 update_notebook.py
+create_ex7_obs.py
 __pycache__/
+*.pyc
 
-# Markdown documents
+# ==============================================================================
+# Markdown Files (Keep observations and syllabus; ignore scratch notes)
+# ==============================================================================
 *.md
+!Observation/*.md
+!syllabus_ml.md
+!README.md
 
-# Jupyter Notebook checkpoints
+# ==============================================================================
+# OS and Editor Metadata
+# ==============================================================================
+.DS_Store
+Thumbs.db
+__MACOSX/
 .ipynb_checkpoints/
-
-# Diagnostics and logs
-*.log
+.vscode/
+.idea/
 .system_generated/
 diagnostics/

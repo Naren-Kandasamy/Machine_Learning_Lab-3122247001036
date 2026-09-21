@@ -1,0 +1,224 @@
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{ICS1512}
+\rhead{Machine Learning Algorithms Laboratory}
+\cfoot{\thepage}
+
+\lstset{
+language=Python,
+basicstyle=\ttfamily\small,
+numbers=left,
+frame=single,
+breaklines=true,
+showstringspaces=false
+}
+
+\begin{document}
+
+\begin{tabular}{|p{4cm}|p{11cm}|}
+\hline
+Experiment No. & 7 \\ \hline
+Experiment Title & Dimensionality Reduction and Model Evaluation (With and Without PCA) \\ \hline
+
+Student Name & Naren Karthik Kandasamy \\ \hline
+Register Number & 3122247001036 \\ \hline
+Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
+Submission Date & 31/8/2026 \\ \hline
+\end{tabular}
+
+\section{Objective}
+To study the effect of dimensionality reduction using Principal Component Analysis (PCA) on the performance of various machine learning classifiers, comparing their metrics, variance, and bias before and after PCA.
+
+\section{Problem Statement}
+We evaluate 10 classification algorithms on the Breast Cancer dataset (30 features) predicting malignancy. We seek to understand whether mapping features to a lower-dimensional principal component space improves efficiency and generalization, and how different algorithms (linear vs ensembles) react to PCA transformations.
+
+\section{Dataset Description}
+\begin{longtable}{|p{6cm}|p{8cm}|}
+\hline
+Dataset Name & Wisconsin Diagnostic Breast Cancer \\ \hline
+Dataset Source & UCI Machine Learning Repository \\ \hline
+Number of Samples & 569 \\ \hline
+Number of Features & 30 \\ \hline
+Number of Classes & 2 (Malignant, Benign) \\ \hline
+Missing Values & None \\ \hline
+Train-Test Split & 80-20 \\ \hline
+\end{longtable}
+
+\section{Exploratory Data Analysis}
+Include all relevant visualizations.
+\begin{itemize}
+\item Dataset overview
+\item Statistical summary
+\item Missing value analysis
+\item Class distribution
+\item Correlation matrix
+\item Feature distribution
+\end{itemize}
+
+\subsection*{Figure Template}
+
+\textbf{Inference:}
+
+The original dataset has 30 numerical attributes. Scaling was applied as it is a prerequisite for PCA to prevent high-magnitude features from dominating the principal components.
+
+\section{Data Preprocessing}
+
+Explain:
+\begin{itemize}
+\item Missing value handling
+\item Encoding
+\item Feature scaling
+\item Train-test split
+\item Standardized features using StandardScaler.
+\item Applied PCA to retain 95\% of the variance.
+\end{itemize}
+
+\section{Machine Learning Algorithm}
+Explain:
+\begin{itemize}
+\item Working principle
+\item Mathematical formulation
+\item Advantages
+\item Limitations
+\end{itemize}
+
+\section{Experimental Setup}
+\begin{tabular}{ll}
+\toprule
+Python Version & \\
+Scikit-Learn Version & \\
+IDE & \\
+Operating System & \\
+Hardware & \\
+\bottomrule
+\end{tabular}
+
+\section{Hyperparameter Selection}
+
+
+\textbf{Table 1: PCA Variance Explained}\\
+\begin{tabular}{lllp{4cm}}\toprule Setting & Chosen Components / Variance Target & Explained Variance (\%) & Justification\\ \midrule
+With-PCA & 10 Components / 95\% Target & 95.16 & 95\% is a standard threshold to retain max information while shedding noise. \\ \bottomrule \end{tabular}
+    
+\vspace{1em}\\ 
+\textbf{Table 2: SVM Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'C': 0.1, 'kernel': 'linear'} (No-PCA) & 98.25\% & - \\
+{'C': 0.1, 'kernel': 'linear'} (With-PCA) & - & 99.12\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 3: Naive Bayes Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'var\_smoothing': 1e-09} (No-PCA) & 96.49\% & - \\
+{'var\_smoothing': 1e-09} (With-PCA) & - & 92.11\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 4: KNN Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'n\_neighbors': 5, 'weights': 'uniform'} (No-PCA) & 94.74\% & - \\
+{'n\_neighbors': 5, 'weights': 'uniform'} (With-PCA) & - & 95.61\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 5: Logistic Regression Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'C': 1} (No-PCA) & 97.37\% & - \\
+{'C': 1} (With-PCA) & - & 98.25\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 6: Decision Tree Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'max\_depth': 3} (No-PCA) & 94.74\% & - \\
+{'max\_depth': 5} (With-PCA) & - & 92.98\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 7: Random Forest Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'n\_estimators': 50} (No-PCA) & 96.49\% & - \\
+{'n\_estimators': 50} (With-PCA) & - & 94.74\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 8: AdaBoost Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'n\_estimators': 50} (No-PCA) & 96.49\% & - \\
+{'n\_estimators': 50} (With-PCA) & - & 95.61\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 9: Gradient Boosting Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'learning\_rate': 0.1, 'n\_estimators': 50} (No-PCA) & 95.61\% & - \\
+{'learning\_rate': 0.1, 'n\_estimators': 50} (With-PCA) & - & 96.49\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 10: XGBoost Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+{'learning\_rate': 0.1, 'n\_estimators': 50} (No-PCA) & 95.61\% & - \\
+{'learning\_rate': 0.1, 'n\_estimators': 50} (With-PCA) & - & 96.49\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\textbf{Table 11: Stacking Hyperparameter Tuning Results}\\
+\begin{tabular}{lll}\toprule Hyperparameters & Performance (No-PCA) & Performance (With-PCA)\\ \midrule
+Base: RF, SVM, XGB (No-PCA) & 98.25\% & - \\
+Base: RF, SVM, XGB (With-PCA) & - & 97.37\% \\ \bottomrule \end{tabular}\vspace{1em}\\
+        
+\vspace{1em}\\ 
+\textbf{Table 12: 5-Fold Cross-Validation Results (No-PCA vs With-PCA)}\\
+\begin{tabular}{llllllll}\toprule Model & Fold 1 & Fold 2 & Fold 3 & Fold 4 & Fold 5 & Avg (No) & Avg (PCA)\\ \midrule
+    SVM (No PCA) & 98.2 & 97.4 & 98.2 & 98.2 & 98.2 & 98.07 & - \\\\ SVM (With PCA) & 98.2 & 97.4 & 97.4 & 97.4 & 99.1 & - & 97.89 \\\\ \midrule Naive Bayes (No PCA) & 91.2 & 95.6 & 92.1 & 93.0 & 96.5 & 93.68 & - \\\\ Naive Bayes (With PCA) & 89.5 & 94.7 & 93.0 & 91.2 & 92.0 & - & 92.09 \\\\ \midrule KNN (No PCA) & 98.2 & 97.4 & 97.4 & 93.0 & 94.7 & 96.13 & - \\\\ KNN (With PCA) & 96.5 & 96.5 & 96.5 & 93.9 & 95.6 & - & 95.78 \\\\ \midrule Logistic Regression (No PCA) & 98.2 & 96.5 & 99.1 & 97.4 & 97.3 & 97.71 & - \\\\ Logistic Regression (With PCA) & 99.1 & 96.5 & 98.2 & 98.2 & 98.2 & - & 98.07 \\\\ \midrule Decision Tree (No PCA) & 94.7 & 87.7 & 92.1 & 90.4 & 94.7 & 91.92 & - \\\\ Decision Tree (With PCA) & 96.5 & 94.7 & 94.7 & 93.9 & 92.9 & - & 94.55 \\\\ \midrule Random Forest (No PCA) & 95.6 & 96.5 & 97.4 & 94.7 & 96.5 & 96.13 & - \\\\ Random Forest (With PCA) & 95.6 & 97.4 & 93.0 & 92.1 & 94.7 & - & 94.55 \\\\ \midrule AdaBoost (No PCA) & 98.2 & 97.4 & 99.1 & 93.9 & 96.5 & 97.01 & - \\\\ AdaBoost (With PCA) & 97.4 & 96.5 & 95.6 & 94.7 & 95.6 & - & 95.96 \\\\ \midrule Gradient Boosting (No PCA) & 96.5 & 93.0 & 97.4 & 94.7 & 95.6 & 95.43 & - \\\\ Gradient Boosting (With PCA) & 95.6 & 93.9 & 95.6 & 93.9 & 96.5 & - & 95.08 \\\\ \midrule XGBoost (No PCA) & 98.2 & 94.7 & 96.5 & 94.7 & 95.6 & 95.96 & - \\\\ XGBoost (With PCA) & 98.2 & 95.6 & 95.6 & 95.6 & 96.5 & - & 96.31 \\\\ \midrule Stacking (No PCA) & 98.2 & 96.5 & 99.1 & 98.2 & 98.2 & 98.07 & - \\\\ Stacking (With PCA) & 97.4 & 96.5 & 97.4 & 98.2 & 98.2 & - & 97.54 \\\\ \bottomrule \end{tabular}
+
+
+
+\section{Results}
+
+\begin{tabular}{lc}
+\toprule
+Metric & Value\\
+\midrule
+See Table 12 above for comprehensive comparison.
+\bottomrule
+\end{tabular}
+
+\section{Result Visualization}
+
+Include all graphs generated during the experiment.
+
+For \textbf{every graph}, provide:
+\begin{itemize}
+\item Figure
+\item Caption
+\item 3--5 line inference
+\end{itemize}
+
+Recommended figures:
+\begin{enumerate}
+\item Correlation Matrix
+\item Class Distribution
+\item Confusion Matrix
+\item ROC Curve
+\item Precision-Recall Curve
+\item Learning Curve (if applicable)
+\item Feature Importance (if applicable)
+\end{enumerate}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{Ex7/Scree_Plot.eps}
+\caption{Scree Plot: Explained Variance by Components.}
+\end{figure}
+
+\section{Discussion}
+PCA successfully reduced the feature space from 30 to 10 components while retaining 95\% variance. Tree-based models (Random Forest, XGBoost) generally perform exceptionally well on original feature spaces but can sometimes see a slight drop in accuracy with PCA since orthogonal transformations disrupt individual feature semantics. Linear models (SVM, Logistic Regression) benefited from decorrelated features and reduced dimensions.
+
+\section{Conclusion}
+The experiment confirmed that PCA is highly effective for reducing dimensionality without significant loss of information. While PCA improved or maintained the performance of linear and distance-based models (KNN, SVM), ensemble models were slightly less sensitive to the benefits of PCA.
+
+\section{References}
+Use IEEE style.
+
+\end{document}

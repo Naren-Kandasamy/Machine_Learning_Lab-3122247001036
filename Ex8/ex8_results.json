@@ -1,0 +1,143 @@
+{
+  "table1_elbow": [
+    {
+      "k": 2,
+      "WCSS": 963418.29,
+      "Silhouette": 0.3815
+    },
+    {
+      "k": 3,
+      "WCSS": 851205.12,
+      "Silhouette": 0.3042
+    },
+    {
+      "k": 4,
+      "WCSS": 812358.47,
+      "Silhouette": 0.246
+    },
+    {
+      "k": 5,
+      "WCSS": 774596.03,
+      "Silhouette": 0.1194
+    },
+    {
+      "k": 6,
+      "WCSS": 751980.97,
+      "Silhouette": 0.1198
+    },
+    {
+      "k": 7,
+      "WCSS": 730037.78,
+      "Silhouette": 0.0969
+    },
+    {
+      "k": 8,
+      "WCSS": 716024.77,
+      "Silhouette": 0.0759
+    }
+  ],
+  "db_tuning": [
+    {
+      "eps": 10.0,
+      "min_samples": 5,
+      "n_clusters": 8,
+      "n_noise": 2627,
+      "noise_pct": 87.57,
+      "silhouette": 0.1413
+    },
+    {
+      "eps": 10.0,
+      "min_samples": 10,
+      "n_clusters": 1,
+      "n_noise": 2783,
+      "noise_pct": 92.77,
+      "silhouette": 0.0
+    },
+    {
+      "eps": 10.0,
+      "min_samples": 15,
+      "n_clusters": 1,
+      "n_noise": 2814,
+      "noise_pct": 93.8,
+      "silhouette": 0.0
+    },
+    {
+      "eps": 15.0,
+      "min_samples": 5,
+      "n_clusters": 8,
+      "n_noise": 838,
+      "noise_pct": 27.93,
+      "silhouette": 0.2995
+    },
+    {
+      "eps": 15.0,
+      "min_samples": 10,
+      "n_clusters": 4,
+      "n_noise": 949,
+      "noise_pct": 31.63,
+      "silhouette": 0.3097
+    },
+    {
+      "eps": 15.0,
+      "min_samples": 15,
+      "n_clusters": 3,
+      "n_noise": 1037,
+      "noise_pct": 34.57,
+      "silhouette": 0.3333
+    }
+  ],
+  "hac_linkages": {
+    "ward": {
+      "silhouette": 0.1279,
+      "davies_bouldin": 2.6018,
+      "calinski_harabasz": 705.32
+    },
+    "complete": {
+      "silhouette": 0.3061,
+      "davies_bouldin": 1.8475,
+      "calinski_harabasz": 605.26
+    },
+    "average": {
+      "silhouette": 0.3368,
+      "davies_bouldin": 1.279,
+      "calinski_harabasz": 55.59
+    },
+    "single": {
+      "silhouette": 0.531,
+      "davies_bouldin": 0.2969,
+      "calinski_harabasz": 11.81
+    }
+  },
+  "comparison_metrics": [
+    {
+      "Algorithm": "K-Means (k=6)",
+      "Silhouette Score": 0.1198,
+      "Davies-Bouldin Index": 2.317,
+      "Calinski-Harabasz Index": 741.37,
+      "Adjusted Rand Index (ARI)": 0.4034,
+      "Normalized Mutual Info (NMI)": 0.5582
+    },
+    {
+      "Algorithm": "DBSCAN",
+      "Silhouette Score": 0.3333,
+      "Davies-Bouldin Index": 1.4767,
+      "Calinski-Harabasz Index": 737.52,
+      "Adjusted Rand Index (ARI)": 0.284,
+      "Normalized Mutual Info (NMI)": 0.4306
+    },
+    {
+      "Algorithm": "Hierarchical (Ward)",
+      "Silhouette Score": 0.1279,
+      "Davies-Bouldin Index": 2.6018,
+      "Calinski-Harabasz Index": 705.32,
+      "Adjusted Rand Index (ARI)": 0.2913,
+      "Normalized Mutual Info (NMI)": 0.4614
+    }
+  ],
+  "best_k": 6,
+  "db_params": {
+    "eps": 15.0,
+    "min_samples": 15,
+    "n_clusters": 3
+  }
+}

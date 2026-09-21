@@ -11,6 +11,7 @@
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{longtable}
+\usepackage{epstopdf}
 
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 
@@ -42,15 +43,18 @@ Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
 Submission Date & 02/08/2026 \\ \hline
 \end{tabular}
 
+\vspace{0.5cm}
+\noindent\textbf{Anaconda Activation Command:} \\
+\texttt{source /opt/anaconda3/bin/activate anaconda-navigation}
+
 \section{Objective}
-In this lab, the main goal is to get hands-on experience with standard Python data science libraries like Numpy, Pandas, Scipy, Scikit-learn, and Matplotlib. We want to understand how to handle data arrays, clean up messy datasets, set up basic machine learning pipelines, and create some helpful visualizations.
+The purpose of this lab was to gain practical experience with the standard Python data-science libraries -- Numpy, Pandas, Scipy, Scikit-learn, and Matplotlib -- by applying them to real datasets. This involved practicing array handling, cleaning up messy data, building a basic machine learning pipeline, and producing an exploratory data analysis summary figure.
 
 \section{Problem Statement}
-The main task is to build a basic automated data processing pipeline. We'll look at a few different public datasets (like the Iris dataset, Loan Prediction, Diabetes, Email Spam, and MNIST) to identify what kind of machine learning problem they represent. We also want to walk through the typical workflow steps: loading the data, doing some exploratory data analysis (EDA), cleaning things up, selecting the best features, and finally splitting the data so it's ready for model training later.
+Before any complex machine learning models can be built, a reliable data processing pipeline needs to be in place. This experiment focuses on that groundwork: bringing in datasets of different shapes and sources, dealing with missing values, encoding categorical strings into numeric form, scaling the numerical inputs, and setting up an automated way to generate exploratory visualizations.
 
 \section{Dataset Description}
-
-Based on the lab requirements, I went through several datasets to figure out what kind of ML task they belong to, what feature selection method works best, and which algorithms we could potentially use:
+Five well-known public datasets were used for this exercise: Iris, Loan Prediction, Diabetes, Email Spam, and MNIST. Each one was looked at individually to work out what type of ML task it belongs to, an appropriate feature-selection technique, and algorithms that would be suitable for it:
 
 \begin{longtable}{|p{3.5cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
 \hline
@@ -64,57 +68,90 @@ Handwritten Character Recognition / MNIST & Supervised (Multi-class Classificati
 \end{longtable}
 
 \section{Exploratory Data Analysis}
-I started by just looking at the datasets using Pandas and Matplotlib to see what we were dealing with. By printing out the first few rows with \texttt{df.head()} and running quick statistical summaries via \texttt{df.describe()}, I could get a good feel for the numbers. I also checked for missing values and plotted some basic histograms and correlation matrices to see how the features were distributed and if any of them were highly related.
+Before any preprocessing was carried out, each dataset was examined using Pandas, Matplotlib, and Seaborn to get a sense of its structure and content. A reusable function was written to automatically pick out the most relevant numerical features and lay out exactly 12 subplots on a single page, following the required Times New Roman, 15 pt, bold axis-label format specified for the lab.
 
 \section{Data Preprocessing}
-To get the data ready for actual machine learning, I built a pipeline that does a few key things:
+To bring the data into a form suitable for modeling, a preprocessing pipeline was put together consisting of the following steps:
 \begin{itemize}
-\item \textbf{Fixing missing values:} If a number was missing, I usually replaced it with the median. If it was a category (like a word), I just used the most common value (the mode).
-\item \textbf{Encoding:} Since models can't read text strings, I converted categorical variables into numbers using simple label encoding.
-\item \textbf{Scaling features:} I scaled the numerical columns to a standard range using \texttt{StandardScaler}. This is super important so that features with naturally larger numbers don't unfairly dominate the distance calculations later.
-\item \textbf{Train-test split:} I split the datasets into a training set and a testing set (typically around an 85\%-15\% split) using \texttt{train\_test\_split} from Scikit-Learn.
-\item \textbf{Feature selection:} I used \texttt{SelectKBest} to figure out which features actually matter the most based on statistical scoring.
+\item \textbf{Handling missing values:} missing entries in numeric columns were filled in using the median, while missing categorical values were filled in using the mode.
+\item \textbf{Encoding:} categorical variables were converted to numeric form using simple label encoding.
+\item \textbf{Feature scaling:} numerical columns were scaled using \texttt{StandardScaler}.
+\item \textbf{Train-test split:} the datasets were split into training and testing sets, in roughly an 80\%-20\% ratio, using Scikit-Learn's \texttt{train\_test\_split}.
+\item \textbf{Feature selection:} \texttt{SelectKBest} was used to pick out the features that carry the most useful signal, based on statistical scoring.
 \end{itemize}
 
 \section{Machine Learning Algorithm}
-Not applicable for this introductory experiment.
+Since this was an introductory experiment centered on data pipelines and exploratory analysis, no formal machine learning models were built or trained during this session. Specific algorithms will be introduced in the experiments that follow.
 
 \section{Experimental Setup}
 \begin{tabular}{ll}
 \toprule
 Python Version & 3.10+ \\
 Scikit-Learn Version & 1.0+ \\
-IDE & Jupyter Notebook / VS Code \\
+IDE & VS Code \\
 Operating System & Linux \\
 Hardware & Standard CPU Workspace \\
 \bottomrule
 \end{tabular}
 
 \section{Hyperparameter Selection}
-Not applicable for this introductory experiment.
+Not applicable for this data preprocessing setup experiment.
 
 \section{Results}
-Not applicable for this introductory experiment.
+Since no models were trained during this session, quantitative performance metrics such as Accuracy, Precision, Recall, or MSE were not applicable here. A reusable metrics function was, however, implemented in \texttt{ml\_utils.py} so that it is ready to use in the experiments that follow.
 
 \section{Result Visualization}
-While running the pipeline, I generated a few graphs just to understand the data before modifying it:
-\begin{itemize}
-\item \textbf{Class Distribution Histograms:} These showed the imbalance between Spam and Ham in the email dataset, and how many people had diabetes versus those who didn't in the medical data.
-\item \textbf{Missing Value Bar Charts:} These quickly highlighted which columns were missing the most data and needed the most imputation.
-\item \textbf{Correlation Heatmaps:} I used these to check if any numerical features were basically measuring the same thing before I scaled them.
-\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{plots/eda_summary_iris.eps}
+\caption{Consolidated EDA summary figure showcasing feature distributions and boxplots (Iris dataset).}
+\end{figure}
+\textbf{Inference:}
+Looking at the EDA plots for the Iris dataset, petal length and petal width show clearer multi-modal distributions compared to the sepal measurements, which suggests these two features are likely to be more useful for distinguishing between the flower species.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{plots/eda_summary_loan.eps}
+\caption{Consolidated EDA summary figure showcasing feature distributions and boxplots (Loan dataset).}
+\end{figure}
+\textbf{Inference:}
+The distributions show that ApplicantIncome and CoapplicantIncome are both heavily skewed, and this carries over into the target variable (LoanAmount), which shows a similar pattern. This suggests that applying some non-linear transformation before modeling could be worth considering.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{plots/eda_summary_diabetes.eps}
+\caption{Consolidated EDA summary figure showcasing feature distributions and boxplots (Diabetes dataset).}
+\end{figure}
+\textbf{Inference:}
+This 12-subplot figure gives a quick overview of how the dataset's numerical features are distributed. Scanning through the histograms and boxplots together makes it easy to spot skewness in certain variables, such as insulin, along with a number of outliers that would need to be addressed before modeling.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{plots/eda_summary_spam.eps}
+\caption{Consolidated EDA summary figure showcasing feature distributions and boxplots (Email Spam dataset).}
+\end{figure}
+\textbf{Inference:}
+The EDA shows long-tail distributions in several of the character-frequency features. Most of the values are concentrated near zero, but the outliers appear to carry a fair amount of the predictive signal for identifying spam.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{plots/eda_summary_mnist.eps}
+\caption{Consolidated EDA summary figure showcasing feature distributions and boxplots (MNIST subset dataset).}
+\end{figure}
+\textbf{Inference:}
+The pixel value distributions show that most pixels are either fully white (0) or fully black (255), with very few values in between. This sparse, near-binary structure is part of why dimensionality reduction techniques such as PCA are commonly applied to MNIST.
 
 \section{Discussion}
-Going through this lab really showed how useful these Python libraries are for data science. Pandas makes it incredibly easy to fix missing data and move columns around without much code. Scikit-Learn handles all the heavy lifting for scaling and splitting the datasets, which saves a ton of time. I also noticed pretty quickly that different types of data (like tabular numbers versus text data) need completely different cleaning strategies. Overall, the automated pipeline we built does a solid job of preparing diverse datasets for whatever model we want to throw at them next.
+This lab made it clear why libraries such as Pandas, NumPy, and Scikit-Learn are so widely used in practice. Pandas made handling missing data and restructuring columns considerably easier, requiring very little code for tasks that would otherwise be tedious to write by hand. Scikit-Learn took care of scaling and splitting the data efficiently. Setting up the single-page, 12-subplot EDA layout also showed that Matplotlib output can be formatted programmatically to meet a fairly strict set of presentation requirements.
 
 \section{Conclusion}
-The lab went really well and the main objectives were met. I got comfortable using Numpy, Pandas, Scikit-Learn, and Matplotlib, and managed to put together a flexible data preprocessing pipeline. Looking at all the different datasets helped me understand how to frame a problem and pick the right approach before we even start training models.
+The objectives of this lab were met. Practical experience was gained with Numpy, Pandas, Scikit-Learn, and Matplotlib, and a preprocessing pipeline flexible enough to handle a range of different datasets was put together, along with a reusable plotting function that can be customized as needed. Working through each dataset individually also helped build a clearer sense of how to frame a problem correctly before moving on to model training in the experiments that follow.
 
 \section{References}
 \begin{enumerate}
-    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, vol. 12, 2011, pp. 2825-2830.
     \item McKinney, W. "Data Structures for Statistical Computing in Python." \textit{Proceedings of the 9th Python in Science Conference}, 2010.
-    \item Hunter, J. D. "Matplotlib: A 2D Graphics Environment." \textit{Computing in Science \& Engineering}, vol. 9, no. 3, 2007, pp. 90-95.
+    \item Pedregosa, F., et al. "Scikit-learn: Machine Learning in Python." \textit{Journal of Machine Learning Research}, 2011.
 \end{enumerate}
 
 \end{document}
