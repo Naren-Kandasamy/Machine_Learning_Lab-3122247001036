@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICS1512 Machine Learning Laboratory — Comprehensive Guide & Viva Defense</title>
+  
+  <!-- MathJax for Crisp LaTeX Equations -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-sidebar: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-light: #eff6ff;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --code-bg: #1e293b;
+      --code-text: #f8fafc;
+      --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --badge-decision: #3b82f6;
+      --badge-whynot: #ef4444;
+      --badge-viva: #8b5cf6;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-sidebar: #0b1120;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-light: #1e3a8a;
+      --success: #10b981;
+      --success-light: #064e3b;
+      --warning: #f59e0b;
+      --warning-light: #78350f;
+      --danger: #ef4444;
+      --danger-light: #7f1d1d;
+      --code-bg: #090d16;
+      --code-text: #e2e8f0;
+      --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+      --badge-decision: #60a5fa;
+      --badge-whynot: #f87171;
+      --badge-viva: #a78bfa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .brand span {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      padding: 8px 14px 8px 34px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      width: 220px;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent);
+      width: 280px;
+      transition: width 0.3s ease;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    /* Sidebar Navigation */
+    nav.sidebar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      bottom: 0;
+      width: 280px;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      padding: 24px 16px;
+      z-index: 900;
+    }
+
+    .sidebar-heading {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-left: 12px;
+      font-weight: 700;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--accent-light);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-badge {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      background-color: var(--border-color);
+      color: var(--text-muted);
+    }
+
+    /* Main Container */
+    main.content {
+      margin-top: 64px;
+      margin-left: 280px;
+      padding: 40px 48px;
+      flex: 1;
+      max-width: 1200px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-light) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin-bottom: 16px;
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Experiment Section Card */
+    .exp-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 48px;
+      box-shadow: var(--card-shadow);
+      scroll-margin-top: 84px;
+    }
+
+    .exp-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+    }
+
+    .exp-num {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .exp-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Box Containers */
+    .info-box {
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 5px solid;
+    }
+
+    .box-overview {
+      background-color: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .box-why {
+      background-color: var(--success-light);
+      border-color: var(--success);
+    }
+
+    .box-whynot {
+      background-color: var(--danger-light);
+      border-color: var(--danger);
+    }
+
+    .box-viva {
+      background-color: var(--warning-light);
+      border-color: var(--warning);
+    }
+
+    .box-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .box-overview .box-title { color: var(--accent); }
+    .box-why .box-title { color: var(--success); }
+    .box-whynot .box-title { color: var(--danger); }
+    .box-viva .box-title { color: var(--warning); }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: var(--accent-light);
+    }
+
+    /* Code Blocks */
+    pre {
+      background-color: var(--code-bg);
+      color: var(--code-text);
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: "Fira Code", Consolas, Monaco, "Andale Mono", monospace;
+      font-size: 0.88rem;
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: inherit;
+    }
+
+    .code-comment {
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .code-keyword {
+      color: #f472b6;
+      font-weight: 600;
+    }
+
+    .code-func {
+      color: #60a5fa;
+    }
+
+    .code-string {
+      color: #34d399;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-decision { background: #dbeafe; color: #1e40af; }
+    .badge-whynot { background: #fee2e2; color: #991b1b; }
+    .badge-viva { background: #f3e8ff; color: #6b21a8; }
+    .badge-math { background: #e0e7ff; color: #3730a3; }
+
+    /* Q&A Accordion Style */
+    .qa-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+
+    .qa-q {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .qa-q span {
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+
+    .qa-a {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+      nav.sidebar {
+        display: none;
+      }
+      main.content {
+        margin-left: 0;
+        padding: 24px 16px;
+      }
+      .search-box input {
+        width: 140px;
+      }
+      .search-box input:focus {
+        width: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Fixed Header -->
+  <header>
+    <a href="#" class="brand">
+      <span>⚡ ML Lab</span> Master Guide
+    </a>
+    <div class="header-actions">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search concepts, tests, viva...">
+      </div>
+      <button class="theme-toggle-btn" id="themeToggle">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sticky Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-heading">Experiments</div>
+    <ul class="nav-list">
+      <li><a href="#ex1" class="nav-link"><span>Ex 1: Automated ML & EDA</span><span class="nav-badge">Workflow</span></a></li>
+      <li><a href="#ex2" class="nav-link"><span>Ex 2: Email Spam Classification</span><span class="nav-badge">NB vs KNN</span></a></li>
+      <li><a href="#ex3" class="nav-link"><span>Ex 3: Regularized Regression</span><span class="nav-badge">Ridge/Lasso</span></a></li>
+      <li><a href="#ex4" class="nav-link"><span>Ex 4: Support Vector Machines</span><span class="nav-badge">Kernels</span></a></li>
+      <li><a href="#ex5" class="nav-link"><span>Ex 5: Decision Tree & Random Forest</span><span class="nav-badge">Ensemble</span></a></li>
+      <li><a href="#ex6" class="nav-link"><span>Ex 6: Bagging, Boosting & Stacking</span><span class="nav-badge">Ensembles</span></a></li>
+      <li><a href="#ex7" class="nav-link"><span>Ex 7: PCA & Model Evaluation</span><span class="nav-badge">Stats Testing</span></a></li>
+      <li><a href="#ex8" class="nav-link"><span>Ex 8: Clustering Sensory Data</span><span class="nav-badge">HAR K-Means</span></a></li>
+      <li><a href="#ex9" class="nav-link"><span>Ex 9: Perceptron vs. MLP (A/B)</span><span class="nav-badge">Neural Net</span></a></li>
+    </ul>
+
+    <div class="sidebar-heading" style="margin-top: 24px;">Viva Defense Ready</div>
+    <ul class="nav-list">
+      <li><a href="#viva-stats" class="nav-link"><span>Statistical Tests Cheat Sheet</span><span class="nav-badge">Unit V</span></a></li>
+      <li><a href="#viva-traps" class="nav-link"><span>Top 15 Faculty Trap Questions</span><span class="nav-badge">Q&A</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="content">
+
+    <!-- Hero Introduction -->
+    <div class="hero-banner">
+      <h1 class="hero-title">ICS1512 Machine Learning Algorithms Laboratory</h1>
+      <p class="hero-subtitle">
+        A rigorous, end-to-end technical guide explaining every architectural design, preprocessing decision, mathematical derivation, and viva defense strategy across all 9 experiments.
+      </p>
+      <div class="meta-pills">
+        <span class="pill">Student: Naren Karthik Kandasamy (3122247001036)</span>
+        <span class="pill">Faculty: Dr. Poreddy Ajay Kumar Reddy</span>
+        <span class="pill">Department: M.Tech CSE (Integrated), V Semester</span>
+        <span class="pill">Academic Year: 2025–2026</span>
+      </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 1 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex1">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 01</div>
+          <h2 class="exp-title">Automated Machine Learning Workflow & Generalized Exploratory Data Analysis</h2>
+        </div>
+        <span class="badge badge-decision">Workflow</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          In production ML, datasets arrive in heterogeneous modalities (continuous, categorical, skewed, missing values). 
+          Experiment 1 builds an <strong>Automated Generalized Exploratory Data Analysis (EDA) pipeline</strong> that autonomously ingests any tabular dataset (Iris, Loan Amount, Pima Diabetes, Spambase, MNIST Digits), detects the problem type (classification vs. regression), generates a consolidated 12-panel visualization, and selects optimal feature-selection techniques.
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>Automated Problem Detection:</strong> If target cardinality is low ($\le 20$) or discrete/string, it is flagged as <em>Classification</em>. If continuous floating-point with high unique ratio, it is flagged as <em>Regression</em>.</li>
+          <li><strong>Median Imputation for Skewed Features:</strong> Clinical indicators (e.g., Insulin, SkinThickness in Diabetes with zero-artifacts) are imputed using the <strong>median</strong>, which is resistant to extreme outliers.</li>
+          <li><strong>ANOVA F-Score Feature Ranking:</strong> We used <code>SelectKBest(score_func=f_classif)</code> because it computes the ratio of between-class variance to within-class variance:
+            $$F = \frac{\text{MS}_{\text{between}}}{\text{MS}_{\text{within}}}$$
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT drop rows with missing values (<code>dropna()</code>)?</strong> In medical datasets like Pima Diabetes, dropping records with zero insulin drops nearly <strong>40% of the entire dataset</strong>. This introduces severe <em>survival bias</em> and cripples statistical power.</li>
+          <li><strong>Why NOT Min-Max Normalization $[0, 1]$ for Gaussian-like features?</strong> Min-Max scaling is extremely fragile to outliers. A single extreme outlier will compress 99% of normal patient readings into a microscopic band ($[0.0, 0.05]$). <code>StandardScaler</code> ($\mu=0, \sigma=1$) was chosen because it preserves variance and outlier leverage.</li>
+          <li><strong>Why NOT One-Hot Encode high-cardinality nominals?</strong> Creating 100+ sparse dummy columns triggers the <em>curse of dimensionality</em>, causing tree algorithms to dilute split decisions.</li>
+        </ul>
+      </div>
+
+      <div class="box-title" style="margin-top: 24px;">💻 Key Code Snippet: Automated Pipeline Decision Logic</div>
+      <pre><code><span class="code-keyword">def</span> <span class="code-func">detect_problem_type</span>(df, target_col):
+    target = df[target_col]
+    <span class="code-comment"># If target is string or unique count is small relative to rows, it is Classification</span>
+    <span class="code-keyword">if</span> target.dtype == <span class="code-string">'object'</span> <span class="code-keyword">or</span> target.nunique() &lt;= <span class="code-func">min</span>(<span class="code-string">20</span>, <span class="code-func">len</span>(df) * <span class="code-string">0.05</span>):
+        <span class="code-keyword">return</span> <span class="code-string">"Classification"</span>, target.nunique()
+    <span class="code-keyword">return</span> <span class="code-string">"Regression"</span>, target.nunique()
+
+<span class="code-comment"># Strict preprocessing pipeline: prevents data leakage</span>
+num_pipeline = Pipeline([
+    (<span class="code-string">'imputer'</span>, SimpleImputer(strategy=<span class="code-string">'median'</span>)),
+    (<span class="code-string">'scaler'</span>, StandardScaler())
+])</code></pre>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why do we say zero values in Pima Indians Diabetes are missing values?"</div>
+          <div class="qa-a"><strong>Answer:</strong> Biological impossibility. Human blood pressure, glucose, BMI, and skin thickness cannot be zero in living individuals. Zeroes in this dataset represent missing measurements encoded as 0. Imputing with median restores physiological validity.</div>
+        </div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "What is the difference between ANOVA and Chi-Square for feature selection?"</div>
+          <div class="qa-a"><strong>Answer:</strong> ANOVA ($F$-test) is used when input features are <strong>continuous/numerical</strong> and target is categorical. Chi-Square ($\chi^2$) is strictly for <strong>categorical input features</strong> against categorical targets.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 2 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex2">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 02</div>
+          <h2 class="exp-title">Email Spam Classification using Naïve Bayes & K-Nearest Neighbors (KNN)</h2>
+        </div>
+        <span class="badge badge-decision">Bayes vs KNN</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Classifying emails as Spam or Ham on the 57-feature Spambase dataset. 
+          The experiment contrasts a <strong>generative probabilistic model</strong> (Naïve Bayes) against an <strong>instance-based non-parametric model</strong> (K-Nearest Neighbors), and explores hyperparameter optimization via Grid Search vs. Randomized Search.
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>Bernoulli vs Multinomial vs Gaussian NB:</strong> Multinomial and Gaussian NB achieved &gt;87% accuracy. We selected Gaussian with <code>var_smoothing=1e-9</code> to prevent division-by-zero on zero-variance continuous features.</li>
+          <li><strong>Manhattan ($L_1$) Distance over Euclidean ($L_2$) for KNN:</strong> In a 57-dimensional word-frequency space, Euclidean distance suffers from distance concentration. Manhattan distance measures orthogonal token discrepancy more robustly.</li>
+          <li><strong>Odd Values of $k$ ($k=1, 3, 5, 7, 9, 11$):</strong> Selected strictly odd $k$ values to mathematically eliminate majority voting ties in binary classification.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT Bernoulli Naïve Bayes?</strong> Bernoulli NB binarizes features ($x_i \in \{0, 1\}$). It completely ignores word frequency! An email containing the word <em>"win"</em> 20 times is treated identically to an email containing it once, losing vital spam intensity signals.</li>
+          <li><strong>Why NOT choose $k=1$ in KNN?</strong> $k=1$ achieves 100% training accuracy but memorizes label noise and outliers (extreme variance/overfitting). Optimal performance stabilized at $k=7$ to $11$.</li>
+          <li><strong>Why NOT large $k$ ($k > 30$)?</strong> High $k$ leads to high bias: the neighborhood expands so widely that majority class (Ham, 60%) completely swallows the minority class (Spam, 40%).</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why is Naïve Bayes called 'Naïve'?"</div>
+          <div class="qa-a"><strong>Answer:</strong> It makes the mathematically unrealistic assumption that all features are conditionally independent given the class: $P(X_1, \dots, X_d | Y) = \prod_{i=1}^d P(X_i | Y)$. In language, words like <em>'credit'</em> and <em>'card'</em> correlate strongly, yet NB still classifies well because classification depends on probability rank, not exact calibration.</div>
+        </div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Grid Search vs. Randomized Search: when to use which?"</div>
+          <div class="qa-a"><strong>Answer:</strong> Grid Search checks every combination exhaustively ($O(\prod |S_i|)$). Randomized Search samples a fixed budget of random combinations; Bergstra & Bengio (2012) proved Randomized Search finds equally optimal hyperparameters in a fraction of the time, especially when only a subset of hyperparameters truly drive performance.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 3 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex3">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 03</div>
+          <h2 class="exp-title">Linear Regression & Regularization (Ridge, Lasso, ElasticNet)</h2>
+        </div>
+        <span class="badge badge-decision">Regularization</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Predicting continuous values while diagnosing multicollinearity and preventing overfitting. 
+          The experiment investigates why unregularized Ordinary Least Squares (OLS) fails under collinearity, and how penalty constraints ($L_1$, $L_2$, ElasticNet) constrain the parameter space.
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>Ridge ($L_2$) for Multicollinear Features:</strong> Adds quadratic weight penalty $\alpha \sum w_j^2$. Prevents $(X^T X)^{-1}$ singular matrix inversion blowup by adding $\alpha I$ to the diagonal.</li>
+          <li><strong>Lasso ($L_1$) for Sparse Feature Selection:</strong> Adds absolute weight penalty $\alpha \sum |w_j|$. Shrinks non-informative coefficients to exactly zero.</li>
+          <li><strong>ElasticNet for Grouping Effect:</strong> Combines $L_1$ and $L_2$:
+            $$\mathcal{L} = \text{MSE} + \alpha \rho \sum |w_j| + \frac{\alpha(1-\rho)}{2} \sum w_j^2$$
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT run Ridge or Lasso without standardizing features first?</strong> <em>CRITICAL TRAP!</em> Penalties $\sum w_j^2$ and $\sum |w_j|$ penalize all coefficients equally. If feature $X_1$ is income in dollars ($10^5$) and $X_2$ is household size ($10^0$), $w_1$ will naturally be $10^{-5}$ smaller. The regularization will penalize $w_2$ heavily while leaving $w_1$ untouched! <strong>Standardization is mathematically mandatory before regularized regression.</strong></li>
+          <li><strong>Why NOT choose Lasso when two features have a correlation &gt; 0.95?</strong> Lasso arbitrarily picks one feature at random and zeroes out the other, losing domain interpretability. ElasticNet preserves both.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why does Lasso produce exact zeroes while Ridge only shrinks close to zero?"</div>
+          <div class="qa-a"><strong>Answer:</strong> Geometry of the constraint region. The $L_1$ ball is a diamond with sharp corners on the coordinate axes. The elliptical loss contours touch the diamond at these axis corners where $w_i = 0$. The $L_2$ ball is a smooth circle/hypersphere, so loss contours touch at non-zero tangent points.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 4 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex4">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 04</div>
+          <h2 class="exp-title">Support Vector Machines (SVM) Kernel and Hyperparameter Tuning</h2>
+        </div>
+        <span class="badge badge-decision">Max Margin</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Maximizing the geometric margin between decision boundaries and closest data points (support vectors). 
+          The experiment evaluates Linear, Polynomial, and Radial Basis Function (RBF) kernels while systematically tuning the soft-margin penalty $C$ and kernel bandwidth $\gamma$.
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>RBF Kernel for Complex Non-linear Data:</strong> Maps data into infinite-dimensional Hilbert space using the Gaussian kernel:
+            $$K(x, x') = \exp(-\gamma \|x - x'\|^2)$$
+          </li>
+          <li><strong>Balancing $C$ (Penalty) & $\gamma$ (Bandwidth):</strong>
+            <ul>
+              <li>$C$: Controls trade-off between maximizing margin width and minimizing training classification errors.</li>
+              <li>$\gamma$: Determines the radius of influence of each support vector.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT use an extremely large $C$ ($C=10^6$)?</strong> Extreme $C$ turns the model into a <em>hard-margin SVM</em>. It forces zero margin violations on the training set, causing the boundary to bend violently around noisy outliers (severe overfitting).</li>
+          <li><strong>Why NOT use an extremely high $\gamma$ ($\gamma=100$)?</strong> High $\gamma$ creates sharp, needle-like Gaussian peaks around individual support vectors. Points outside the immediate radius are classified as default majority class.</li>
+          <li><strong>Why NOT high-degree Polynomial kernels ($d \ge 5$)?</strong> High-degree polynomial kernels suffer from numerical overflow, slow convergence in quadratic programming, and extreme boundary fluctuations at the edges of the feature space.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "What are Support Vectors?"</div>
+          <div class="qa-a"><strong>Answer:</strong> Support vectors are the critical data points that lie directly on or inside the margin boundaries ($y_i (w^T x_i + b) \le 1$). Moving or removing any other non-support training points will not change the decision boundary at all.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 5 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex5">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 05</div>
+          <h2 class="exp-title">Decision Tree & Random Forest (Mitigating Overfitting & Bagging)</h2>
+        </div>
+        <span class="badge badge-decision">Trees & Bagging</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Diagnosing and curing the fundamental weakness of single decision trees: <strong>high variance (overfitting)</strong>. 
+          We evaluate the Wisconsin Diagnostic Breast Cancer dataset (569 samples, 30 continuous features) comparing a standalone pruned tree against a 100-tree Random Forest ensemble.
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>Cost-Complexity Pruning via <code>max_depth=5</code> & <code>min_samples_split=5</code>:</strong> Restricts the depth of individual trees to prevent leaves with single training samples.</li>
+          <li><strong>Random Feature Subsampling (<code>max_features='sqrt'</code>):</strong> At each split, Random Forest considers only $\sqrt{30} \approx 5$ random features. This <strong>de-correlates</strong> the trees!</li>
+          <li><strong>Bootstrapping (<code>bootstrap=True</code>):</strong> Each tree trains on an independent sample with replacement of size $N$, leaving $\sim 36.8\%$ Out-of-Bag (OOB) samples for validation.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT leave <code>max_depth=None</code> for a single tree?</strong> Without depth limits, a decision tree will split until every single leaf is pure ($100\%$ training accuracy), creating a brittle staircase boundary that overfits training noise.</li>
+          <li><strong>Why NOT set <code>max_features=1.0</code> (all features) in Random Forest?</strong> If all trees can see all features, they will all pick the single most dominant feature (e.g. <code>worst concave points</code>) at the root node. The trees will all be highly correlated, and averaging correlated trees does NOT reduce variance!</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why does Random Forest reduce variance without increasing bias?"</div>
+          <div class="qa-a"><strong>Answer:</strong> The variance of the average of $B$ random variables with pairwise correlation $\rho$ and variance $\sigma^2$ is $\rho \sigma^2 + \frac{1 - \rho}{B}\sigma^2$. As $B \to \infty$, the second term drops to zero. By randomly sampling features, $\rho$ is minimized, drastically lowering overall variance while individual trees remain unbiased.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 6 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex6">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 06</div>
+          <h2 class="exp-title">Bagging, Boosting, and Stacked Ensemble Models</h2>
+        </div>
+        <span class="badge badge-decision">Ensemble Paradigms</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          A rigorous head-to-head comparison of the three primary ensemble learning paradigms on the Breast Cancer benchmark: 
+          <strong>Bagging</strong> (parallel variance reduction), <strong>Boosting</strong> (sequential bias reduction via AdaBoost & Gradient Boosting), and <strong>Stacking</strong> (heterogeneous blending via a meta-learner).
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>AdaBoost Sample Reweighting:</strong> Instances misclassified by model $m$ have their sample weights increased:
+            $$w_i^{(m+1)} = w_i^{(m)} \exp(\alpha_m \mathbb{I}(y_i \neq h_m(x_i)))$$
+          </li>
+          <li><strong>Gradient Boosting Pseudo-Residuals:</strong> Sequentially fits decision trees to the negative gradient of the loss function (pseudo-residuals).</li>
+          <li><strong>Heterogeneous Stacking:</strong> Combines structurally diverse learners (<code>SVC</code>, <code>GaussianNB</code>, <code>DecisionTree</code>) whose error distributions are uncorrelated, using <code>LogisticRegression</code> as the meta-learner.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT use a complex non-linear model (like deep Neural Net or Random Forest) as the Stacking meta-learner?</strong> A complex meta-learner easily overfits the base predictions, memorizing which base model was right on the training set. A simple regularized linear model (Logistic Regression) acts as an optimal convex weight combiner.</li>
+          <li><strong>Why NOT use AdaBoost when datasets have severe label noise?</strong> Exponential loss penalizes misclassifications exponentially ($e^x$). If outliers or mislabeled samples exist, AdaBoost obsesses over them and ruins the overall decision boundary. Gradient Boosting or Huber loss is much more robust.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Explain the fundamental difference between Bagging and Boosting."</div>
+          <div class="qa-a"><strong>Answer:</strong> Bagging trains independent base models in <strong>parallel</strong> on random bootstrap samples to reduce <strong>variance</strong>. Boosting trains base models <strong>sequentially</strong>, where each new model focuses on the errors of preceding models to reduce <strong>bias</strong>.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 7 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex7">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 07</div>
+          <h2 class="exp-title">Dimensionality Reduction (PCA), Model Evaluation & Multi-Dataset Statistical Testing</h2>
+        </div>
+        <span class="badge badge-decision">PCA & Unit V Stats</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Investigating the impact of Principal Component Analysis (PCA) on 10 diverse classifiers evaluated under 5-fold cross-validation. 
+          To satisfy faculty verbal instructions, the PCA pipeline was evaluated across <strong>all 6 classification datasets from Labs 1–7</strong>, followed by a mathematically rigorous 3-tier statistical testing suite grounded in <code>Unit_V notes.pdf</code>.
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>95% Cumulative Variance Cutoff Criterion:</strong> Selected the minimal component count $d$ satisfying:
+            $$\frac{\sum_{i=1}^d \lambda_i}{\sum_{j=1}^D \lambda_j} \ge 0.95$$
+            Compresses Breast Cancer from $30 \to 10$ components (66.7% reduction) while retaining full structural variance.
+          </li>
+          <li><strong>The 3 Apt Statistical Tests (Unit V Notes Alignment):</strong>
+            <ul>
+              <li><strong>Tier 1: Paired Two-Sample $t$-Test with Shapiro-Wilk Pre-Check:</strong> Evaluates if fold differences $\Delta_i = F1_{\text{PCA}, i} - F1_{\text{No-PCA}, i}$ on identical folds are statistically significant.</li>
+              <li><strong>Tier 2: Wilcoxon Signed-Rank Test:</strong> Non-parametric paired ranking test across the 10 heterogeneous model families per dataset ($n=10$) and globally ($N=60$).</li>
+              <li><strong>Tier 3: Friedman Test:</strong> Non-parametric two-way ANOVA by ranks comparing all 10 algorithms simultaneously across repeated benchmark blocks without Type I error inflation.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT an Independent $t$-Test?</strong> <em>CRITICAL FACULTY TRAP!</em> Handout & Unit V notes (pp. 4, 26) strictly forbid independent $t$-tests because models are evaluated on the <strong>exact same validation folds</strong>. The samples are matched pairs; assuming independence violates core statistical assumptions.</li>
+          <li><strong>Why NOT 45 Pairwise $t$-Tests ($\binom{10}{2}$)?</strong> Running 45 individual tests inflates the family-wise Type I error rate to $1 - (1-0.05)^{45} \approx \mathbf{90\%}$! The <strong>Friedman Test</strong> solves this by performing an omnibus rank test across all models simultaneously.</li>
+          <li><strong>Why NOT fit PCA before splitting into Cross-Validation Folds?</strong> <em>DATA LEAKAGE!</em> If PCA fits on the entire dataset, the eigenvectors learn variance directions from the test folds. PCA <strong>must be enclosed inside an isolated Pipeline</strong> that fits only on the training fold: <code>Pipeline([StandardScaler(), PCA(), Classifier()])</code>.</li>
+          <li><strong>Why did Decision Trees plummet under PCA (Rank $8.25 \to 9.67$)?</strong> Decision Trees make axis-aligned cuts ($x_j \le \theta$) parallel to coordinate axes. PCA rotates features into dense linear combinations of all variables, destroying natural semantic thresholds.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why did Breast Cancer compress 66.7% with zero loss, while Iris (4 to 2) degraded?"</div>
+          <div class="qa-a"><strong>Answer:</strong> Breast Cancer contains heavy multicollinearity (radius, perimeter, area correlate at $r > 0.98$). 10 PCs eliminate redundancy without loss. Iris has only 4 features that are already concise; dropping 2 discards non-redundant boundary variance.</div>
+        </div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why did Linear Models (Logistic Regression & SVM) gain top ranks under PCA?"</div>
+          <div class="qa-a"><strong>Answer:</strong> PCA diagonalizes the covariance matrix, producing mutually orthogonal predictors with zero covariance ($\text{Cov}(PC_i, PC_j) = 0$). This eliminates multicollinear variance inflation, allowing linear hyperplanes to separate classes with maximum stability.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 8 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex8">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 08</div>
+          <h2 class="exp-title">Unsupervised Clustering on Human Activity Recognition (UCI HAR)</h2>
+        </div>
+        <span class="badge badge-decision">Clustering HAR</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Unsupervised pattern discovery on 561 continuous inertial features from waist-mounted smartphones (10,299 instances). 
+          The experiment implements and evaluates <strong>K-Means Clustering</strong> (Elbow & Silhouette optimization), <strong>DBSCAN</strong> (density-based noise isolation), and <strong>Hierarchical Agglomerative Clustering</strong> (Ward's linkage).
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>Choosing $k=6$ over $k=2$ in K-Means:</strong> The Silhouette score peaked at $k=2$ ($0.3815$) because it cleanly isolates dynamic kinetic movement (walking) from static postures (sitting/standing). However, $k=6$ was chosen because the engineering objective is to separate all <strong>6 physical activities</strong> defined by domain ground truth.</li>
+          <li><strong>DBSCAN Parameter Tuning ($\epsilon=15.0, minPts=15$):</strong> Filtered $34.57\%$ transitional outlier frames (body state transitions) while maintaining dense core clusters.</li>
+          <li><strong>Ward's Linkage for Hierarchical Clustering:</strong> Minimizes the within-cluster sum of squared differences ($\Delta \text{ESS}$), producing compact, equal-variance clusters ($\text{CH} = 705.32$).</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why NOT use Single Linkage for Hierarchical Clustering?</strong> <em>THE CHAINING TRAP!</em> Single linkage connects clusters based on the minimum distance between any two single points. It builds long, stringy chains that connect noisy points, collapsing 99% of data into one uninformative blob ($\text{CH} = 11.81$ vs Ward's $705.32$).</li>
+          <li><strong>Why NOT use a small $\epsilon$ ($\epsilon=1.0$ or $5.0$) in DBSCAN?</strong> <em>CURSE OF DIMENSIONALITY!</em> In 561-dimensional sensor space, Euclidean distances concentrate: the distance between any two random points approaches a constant. With $\epsilon=10.0$, <strong>93.8% of points are classified as noise</strong>! Radius must be expanded to $\epsilon=15.0$.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Explain the difference between Silhouette Score, Davies-Bouldin, and Calinski-Harabasz."</div>
+          <div class="qa-a">
+            <strong>Answer:</strong>
+            <ul>
+              <li><strong>Silhouette ($[-1, 1]$):</strong> Compares within-cluster distance $a(i)$ to nearest-cluster distance $b(i)$. Higher is better.</li>
+              <li><strong>Davies-Bouldin ($[0, \infty)$):</strong> Ratio of within-cluster scatter to separation between centroid pairs. <strong>Lower is better</strong>.</li>
+              <li><strong>Calinski-Harabasz ($[0, \infty)$):</strong> Variance ratio criterion of between-cluster dispersion to within-cluster dispersion. <strong>Higher is better</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- EXPERIMENT 9 -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="ex9">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Experiment 09</div>
+          <h2 class="exp-title">Perceptron vs. Multilayer Perceptron (A/B Experiment) with Hyperparameter Tuning</h2>
+        </div>
+        <span class="badge badge-decision">PLA vs MLP</span>
+      </div>
+
+      <div class="info-box box-overview">
+        <div class="box-title">📌 What the Experiment Is & The Problem Solved</div>
+        <p>
+          Demonstrating the historical and mathematical divergence between a linear single-layer threshold model and a deep connectionist neural network. 
+          Evaluated on the 62-class English Handwritten Characters dataset (3,410 images resized to $28 \times 28$, 784 pixel features).
+        </p>
+      </div>
+
+      <div class="info-box box-why">
+        <div class="box-title">💡 Key Decisions Made: How & Why We Did It</div>
+        <ul>
+          <li><strong>Single-Layer PLA from Scratch:</strong> Implemented Rosenblatt's weight update rule with step activation:
+            $$w_{t+1} = w_t + \eta(y - \hat{y})x$$
+          </li>
+          <li><strong>Tuned MLP Architecture:</strong> Input(784) $\to$ Dense(256, ReLU) $\to$ Dense(128, ReLU) $\to$ Softmax(62) trained with Adam ($\eta=0.001$). Achieved **41.35% accuracy** vs PLA's **12.61%**.</li>
+          <li><strong>Adam Optimizer over SGD:</strong> Uses exponential moving averages of gradients ($m_t$) and squared gradients ($v_t$) to provide adaptive per-parameter learning rate scaling.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-whynot">
+        <div class="box-title">🚫 What We Chose NOT to Do (And Why Not) — The "Why Not" Analysis</div>
+        <ul>
+          <li><strong>Why does Single-Layer PLA underperform (12.61%)?</strong> <em>Minsky-Papert Perceptron Theorem!</em> A single-layer perceptron converges <strong>if and only if the data is linearly separable</strong>. Handwritten characters have curved loops, slants, and complex stroke variations across 62 classes that are fundamentally non-linearly separable. PLA has zero hidden layers and cannot learn intermediate geometric representations.</li>
+          <li><strong>Why NOT Sigmoid in MLP hidden layers?</strong> <em>VANISHING GRADIENTS!</em> The derivative of Sigmoid $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ has a maximum value of $0.25$. Multiplying derivatives across hidden layers causes backpropagated error gradients to vanish to zero ($0.25^L \to 0$). ReLU ($\sigma'(z) = 1$ for $z>0$) keeps gradients active.</li>
+          <li><strong>Why NOT 10 hidden layers?</strong> On 3,410 total images (only 55 images per class), a 10-layer network has millions of parameters. It quickly memorizes the training data, leading to severe overfitting.</li>
+        </ul>
+      </div>
+
+      <div class="info-box box-viva">
+        <div class="box-title">🎯 Viva & Demo Defense: Questions You Might Face</div>
+        <div class="qa-card">
+          <div class="qa-q"><span>Q:</span> "Why does PLA oscillate and never reach zero error on this dataset?"</div>
+          <div class="qa-a"><strong>Answer:</strong> On non-separable data, Rosenblatt's perceptron cycling theorem proves the weight vector will bounce back and forth between conflicting samples indefinitely without converging.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- VIVA MASTER DEFENSE -->
+    <!-- ============================================================= -->
+    <section class="exp-card" id="viva-stats">
+      <div class="exp-header">
+        <div>
+          <div class="exp-num">Viva Defense Master Guide</div>
+          <h2 class="exp-title">Unit V Statistical Hypothesis Testing Framework</h2>
+        </div>
+        <span class="badge badge-viva">Cheat Sheet</span>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Experimental Situation</th>
+              <th>Appropriate Statistical Test</th>
+              <th>Why It Is Required</th>
+              <th>When It Is Forbidden</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Two models on the SAME datasets / CV folds</strong></td>
+              <td><strong>Paired Two-Sample $t$-Test</strong></td>
+              <td>Evaluates matched fold differences $\Delta_i$. Eliminates inter-fold variance.</td>
+              <td>Do NOT use if fold differences fail Shapiro-Wilk normality test ($p < 0.05$).</td>
+            </tr>
+            <tr>
+              <td><strong>Two models, non-normal differences</strong></td>
+              <td><strong>Wilcoxon Signed-Rank Test</strong></td>
+              <td>Non-parametric test based on signed ranks of absolute differences $|d_i|$.</td>
+              <td>Do NOT use on independent, non-paired samples.</td>
+            </tr>
+            <tr>
+              <td><strong>Three or more models on SAME datasets</strong></td>
+              <td><strong>Friedman Test</strong></td>
+              <td>Non-parametric two-way ANOVA by ranks. Prevents family-wise Type I error inflation.</td>
+              <td>Do NOT use independent One-Way ANOVA (violates block dependence).</td>
+            </tr>
+            <tr>
+              <td><strong>Two independent experimental groups</strong></td>
+              <td><strong>Independent $t$-Test</strong></td>
+              <td>Compares independent sample means with pooled variance.</td>
+              <td>Do NOT use when models share the same validation folds or datasets.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Theme Toggle Functionality
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeUI(currentTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const activeTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = activeTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'dark') {
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Light';
+      } else {
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'Dark';
+      }
+    }
+
+    // Live Search Filter
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.exp-card');
+      
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(term)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Active link highlighting on scroll
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 120;
+      const links = document.querySelectorAll('.nav-link');
+      const cards = document.querySelectorAll('.exp-card');
+
+      cards.forEach(card => {
+        const top = card.offsetTop;
+        const height = card.offsetHeight;
+        const id = card.getAttribute('id');
+
+        if (scrollPos >= top && scrollPos < top + height) {
+          links.forEach(l => {
+            if (l.getAttribute('href') === `#${id}`) {
+              l.classList.add('active');
+            } else {
+              l.classList.remove('active');
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
