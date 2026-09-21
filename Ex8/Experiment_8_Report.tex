@@ -2,6 +2,7 @@
 
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{graphicx}
+\graphicspath{{./}{Ex8/}}
 \usepackage{booktabs}
 \usepackage{amsmath,amssymb}
 \usepackage{float}
@@ -16,6 +17,7 @@
 
 \pagestyle{fancy}
 \fancyhf{}
+\setlength{\headheight}{15pt}
 \lhead{ICS1512}
 \rhead{Machine Learning Algorithms Laboratory}
 \cfoot{\thepage}
@@ -25,184 +27,198 @@
 \begin{tabular}{|p{4cm}|p{11cm}|}
 \hline
 Experiment No. & 8 \\ \hline
-Experiment Title & Clustering Human Activity Recognition Data using K-Means, DBSCAN, and Hierarchical Clustering \\ \hline
+Experiment Title & Clustering Human Activity Recognition Data using K-Means, DBSCAN, and Hierarchical Clustering\footnote{\textbf{GitHub Repository: }\url{https://github.com/Naren-Kandasamy/Machine_Learning_Lab-3122247001036}}\\ \hline
 Student Name & Naren Karthik Kandasamy \\ \hline
 Register Number & 3122247001036 \\ \hline
 Faculty & Dr. Poreddy Ajay Kumar Reddy \\ \hline
 Submission Date & 19/09/2026 \\ \hline
 \end{tabular}
 
+\vspace{1em}
+
 \section{Objective}
-To implement and analyze the performance of unsupervised clustering algorithms on the Human Activity Recognition (HAR) dataset:
+To implement, tune, and evaluate unsupervised clustering algorithms on high-dimensional sensory data from the Human Activity Recognition (HAR) benchmark:
 \begin{itemize}[noitemsep]
-    \item \textbf{Model A:} K-Means Clustering with Elbow and Silhouette optimization.
-    \item \textbf{Model B:} DBSCAN (Density-Based Spatial Clustering of Applications with Noise).
-    \item \textbf{Model C:} Hierarchical Agglomerative Clustering (HAC) exploring diverse linkage criteria.
+    \item \textbf{Model A:} K-Means Clustering optimized via the Elbow Method and Silhouette Analysis.
+    \item \textbf{Model B:} Density-Based Spatial Clustering of Applications with Noise (DBSCAN) exploring spatial radius ($\epsilon$) and density thresholds ($minPts$).
+    \item \textbf{Model C:} Hierarchical Agglomerative Clustering (HAC) exploring diverse linkage criteria (Ward, Complete, Average, Single).
 \end{itemize}
-The objective is to evaluate clusters formed by each algorithm using both internal validation metrics and external ground-truth activity comparisons.
+
+\section{Problem Statement}
+In pervasive computing and wearable health monitoring, physical movements are logged across multi-channel inertial sensors (accelerometers, gyroscopes). The goal is to discover natural kinetic groupings in an unsupervised 561-dimensional feature space without utilizing ground-truth labels during training, and to evaluate cluster validity using both internal geometric metrics and external ground-truth activity alignment.
 
 \section{Dataset Description}
-The \textbf{Human Activity Recognition Using Smartphones} dataset consists of sensory signals recorded from 30 participants (aged 19--48 years) performing six daily activities wearing a Samsung Galaxy S II smartphone on their waist.
+The \textbf{Human Activity Recognition Using Smartphones} dataset captures waist-mounted inertial sensor measurements across 30 volunteer participants performing daily living routines.
 \begin{longtable}{|p{5.5cm}|p{9.5cm}|}
 \hline
 \textbf{Property} & \textbf{Specification} \\ \hline
 Dataset Source & UCI Machine Learning Repository \\ \hline
-Sensor Modalities & 3-Axis Accelerometer and 3-Axis Gyroscope (50 Hz) \\ \hline
-Windowing & 2.56-second sliding windows (128 readings, 50\% overlap) \\ \hline
-Number of Samples & 10,299 instances (7,352 train + 2,947 test) \\ \hline
-Number of Features & 561 time- and frequency-domain extracted metrics \\ \hline
+Sensors & 3-Axis Accelerometer and 3-Axis Gyroscope (50 Hz) \\ \hline
+Sampling Window & 2.56-second sliding windows (128 readings, 50\% overlap) \\ \hline
+Total Instances & 10,299 instances (7,352 train + 2,947 test) \\ \hline
+Feature Dimensions & 561 time- and frequency-domain extracted metrics \\ \hline
 Ground-Truth Activities (6) & WALKING, WALKING\_UPSTAIRS, WALKING\_DOWNSTAIRS, SITTING, STANDING, LAYING \\ \hline
 \end{longtable}
 
-\section{Theory and Methodology}
+\section{Exploratory Data Analysis}
+Exploratory analysis examines the intrinsic geometric distribution of physical activity clusters projected onto the primary 2D principal component manifold.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{Cluster_Scatter.eps}
+\caption{2D PCA Visualizations: Ground Truth vs. K-Means, DBSCAN, and Hierarchical Clustering.}
+\label{fig:eda_scatter}
+\end{figure}
+
+\textbf{Inference:}
+The 2D projection reveals a pronounced macro-separation between dynamic kinetic states (walking, walking upstairs/downstairs) occupying the positive PC1 coordinate region, and static postural states (sitting, standing, laying) clustering in the negative PC1 domain. Overlaps between sitting and standing reflect shared static vertical sensor orientations.
+
+\section{Data Preprocessing}
+Sensor features are derived from Butterworth bandpass filtering (0.02--20 Hz) and Fast Fourier Transforms (FFT). To prevent high-variance inertial components from skewing Euclidean distances, features are standardized to zero mean and unit variance:
+$$\mathbf{z} = \frac{\mathbf{x} - \mathbf{\mu}}{\mathbf{\sigma}}$$
+Outlier transitions and boundary frames are preserved for DBSCAN noise isolation.
+
+\section{Machine Learning Algorithm}
 \subsection{K-Means Clustering}
-Partitions $n$ data points into $k$ disjoint clusters $S = \{S_1, \dots, S_k\}$ to minimize Within-Cluster Sum of Squares (WCSS):
-\begin{equation}
-\text{WCSS} = \sum_{i=1}^k \sum_{x \in S_i} \|x - \mu_i\|^2
-\end{equation}
-where $\mu_i$ represents the centroid of cluster $S_i$. We determine the optimal $k$ using the \textbf{Elbow Method} (where rate of WCSS reduction diminishes) combined with the \textbf{Silhouette Score}.
+Minimizes the Within-Cluster Sum of Squares (WCSS):
+$$\text{WCSS} = \sum_{i=1}^k \sum_{\mathbf{x} \in S_i} \|\mathbf{x} - \mathbf{\mu}_i\|^2$$
+\textbf{Advantages:} Efficient convergence ($O(n \cdot k \cdot t)$), scalable to large datasets. \textbf{Limitations:} Assumes spherical clusters of equal variance, sensitive to initial centroid placement.
 
 \subsection{DBSCAN}
-A density-based clustering algorithm characterized by parameters $\epsilon$ (neighborhood radius) and $minPts$ (density threshold). Points are categorized into core points, density-reachable border points, and noise ($ -1 $). DBSCAN discovers arbitrary geometries without pre-specifying $k$ and isolates outlier transitions.
+Classifies points as core points ($|N_\epsilon(\mathbf{p})| \ge minPts$), border points, or noise.
+\textbf{Advantages:} Discovers arbitrary non-linear cluster geometries, robust to sensory outliers without pre-defining $k$. \textbf{Limitations:} Degrades in high-dimensional spaces due to distance concentration.
 
 \subsection{Hierarchical Agglomerative Clustering (HAC)}
-Constructs a nested bottom-up dendrogram by iteratively merging the pair of clusters minimizing a linkage criterion:
-\begin{itemize}[noitemsep]
-    \item \textbf{Ward's Method:} Minimizes the total within-cluster variance increase.
-    \item \textbf{Complete Linkage:} Maximum pairwise Euclidean distance between cluster points.
-    \item \textbf{Average Linkage:} Mean pairwise distance between cluster members.
-    \item \textbf{Single Linkage:} Minimum pairwise distance (susceptible to chaining).
-\end{itemize}
+Builds a bottom-up hierarchical dendrogram using Ward's minimum variance linkage:
+$$\Delta \text{ESS}_{AB} = \frac{n_A n_B}{n_A + n_B} \|\mathbf{\mu}_A - \mathbf{\mu}_B\|^2$$
+\textbf{Advantages:} Does not require pre-specifying cluster count initially; provides an interpretable hierarchy. \textbf{Limitations:} High computational complexity ($O(n^2 \log n)$).
 
-\section{Experimental Results and Evaluation}
-
-\subsection{K-Means Elbow Method Results}
-Table~\ref{tab:elbow} and Figures~\ref{fig:elbow} and~\ref{fig:silhouette} summarize the Elbow Method and Silhouette evaluations across cluster counts $k \in [2, 8]$.
-
+\section{Experimental Setup}
 \begin{table}[H]
 \centering
-\caption{K-Means Elbow Method Results}
-\label{tab:elbow}
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{Number of Clusters ($k$)} & \textbf{WCSS (Inertia)} & \textbf{Silhouette Score} \\ \hline
-    2 & 963418.29 & 0.3815 \\ \hline
-    3 & 851205.12 & 0.3042 \\ \hline
-    4 & 812358.47 & 0.246 \\ \hline
-    5 & 774596.03 & 0.1194 \\ \hline
-    6 & 751980.97 & 0.1198 \\ \hline
-    7 & 730037.78 & 0.0969 \\ \hline
-    8 & 716024.77 & 0.0759 \\ \hline
+\begin{tabular}{ll}
+\toprule
+\textbf{Environment Property} & \textbf{Specification} \\
+\midrule
+Python Version & 3.12.0 \\
+Scikit-Learn Version & 1.4.2 \\
+Environment Command & \texttt{source /opt/anaconda3/bin/activate anaconda-navigation} \\
+Operating System & Linux (x86\_64) \\
+Plot Resolution & 600 DPI (Vector EPS) \\
+Plot Font & Times New Roman, 15 pt, Bold X/Y Labels \\
+\bottomrule
 \end{tabular}
 \end{table}
+
+\section{Hyperparameter Selection}
+
+\textbf{Table 1: K-Means Elbow \& Silhouette Hyperparameter Evaluation}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|p{6cm}|}
+\hline
+\textbf{Clusters ($k$)} & \textbf{WCSS (Inertia)} & \textbf{Silhouette Score} & \textbf{Justification} \\ \hline
+2 & 963,418.29 & 0.3815 & Peaks on macro dynamic vs static split. \\ \hline
+3 & 851,205.12 & 0.3042 & Captures laying as separate cluster. \\ \hline
+4 & 812,358.47 & 0.2460 & Separates walking upstairs. \\ \hline
+5 & 774,596.03 & 0.1194 & Diminishing inertia gains. \\ \hline
+\textbf{6} & \textbf{751,980.97} & \textbf{0.1198} & \textbf{Matches true 6 physical activities.} \\ \hline
+7 & 730,037.78 & 0.0969 & Over-clustering static postures. \\ \hline
+8 & 716,024.77 & 0.0759 & Fragmented activity partitions. \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Table 2: DBSCAN Hyperparameter Exploration ($\epsilon$ vs. $minPts$)}
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{$\epsilon$} & \textbf{$minPts$} & \textbf{Clusters Found} & \textbf{Noise Points (\%)} & \textbf{Silhouette Score} \\ \hline
+10.0 & 5 & 8 & 87.57\% & 0.1413 \\ \hline
+10.0 & 15 & 1 & 93.80\% & 0.0000 \\ \hline
+15.0 & 5 & 8 & 27.93\% & 0.2995 \\ \hline
+\textbf{15.0} & \textbf{15} & \textbf{3} & \textbf{34.57\%} & \textbf{0.3333} \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Results}
+\begin{table}[H]
+\centering
+\caption{Comprehensive Clustering Benchmark Across Algorithms}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Algorithm} & \textbf{Silhouette} & \textbf{Davies-Bouldin} & \textbf{Calinski-Harabasz} & \textbf{ARI} & \textbf{NMI} \\ \hline
+K-Means ($k=6$) & 0.1198 & 2.3170 & \textbf{741.37} & \textbf{0.4034} & \textbf{0.5582} \\ \hline
+DBSCAN ($\epsilon=15$) & \textbf{0.3333} & \textbf{1.4767} & 737.52 & 0.2840 & 0.4306 \\ \hline
+Hierarchical (Ward) & 0.1279 & 2.6018 & 705.32 & 0.2913 & 0.4614 \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Result Visualization}
 
 \begin{figure}[H]
 \centering
 \begin{minipage}{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Ex8/Elbow_Curve.eps}
-    \caption{K-Means Elbow Curve (WCSS vs $k$)}
+    \includegraphics[width=\linewidth]{Elbow_Curve.eps}
+    \caption{K-Means Elbow Curve (Inertia vs. $k$).}
     \label{fig:elbow}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Ex8/Silhouette_Curve.eps}
-    \caption{K-Means Silhouette Score vs $k$}
-    \label{fig:silhouette}
+    \includegraphics[width=\linewidth]{Silhouette_Curve.eps}
+    \caption{Silhouette Score vs. Cluster Count $k$.}
+    \label{fig:sil}
 \end{minipage}
 \end{figure}
 
-\subsection{DBSCAN Parameter Tuning}
-Table~\ref{tab:dbscan} documents the exploration across spatial radius $\epsilon$ and $minPts$. At $\epsilon = 15.0$ and $minPts = 15$, DBSCAN achieves a balance with a representative noise threshold.
-
-\begin{table}[H]
-\centering
-\caption{DBSCAN Parameter Exploration and Noise Detection}
-\label{tab:dbscan}
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-\textbf{$\epsilon$} & \textbf{$minPts$} & \textbf{Clusters Found} & \textbf{Noise Points} & \textbf{Noise \%} & \textbf{Silhouette} \\ \hline
-    10.0 & 5 & 8 & 2627 & 87.57\% & 0.1413 \\ \hline
-    10.0 & 10 & 1 & 2783 & 92.77\% & 0.0 \\ \hline
-    10.0 & 15 & 1 & 2814 & 93.8\% & 0.0 \\ \hline
-    15.0 & 5 & 8 & 838 & 27.93\% & 0.2995 \\ \hline
-    15.0 & 10 & 4 & 949 & 31.63\% & 0.3097 \\ \hline
-    15.0 & 15 & 3 & 1037 & 34.57\% & 0.3333 \\ \hline
-\end{tabular}
-\end{table}
-
-\subsection{Hierarchical Linkage Comparison}
-Table~\ref{tab:hac} summarizes internal validation metrics for HAC with $k=6$ across four linkage criteria. Figure~\ref{fig:dendro} illustrates the hierarchical merging tree.
-
-\begin{table}[H]
-\centering
-\caption{HAC Linkage Methods Comparison ($k=6$)}
-\label{tab:hac}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Linkage} & \textbf{Silhouette Score} & \textbf{Davies-Bouldin} & \textbf{Calinski-Harabasz} \\ \hline
-    Ward & 0.1279 & 2.6018 & 705.32 \\ \hline
-    Complete & 0.3061 & 1.8475 & 605.26 \\ \hline
-    Average & 0.3368 & 1.279 & 55.59 \\ \hline
-    Single & 0.531 & 0.2969 & 11.81 \\ \hline
-\end{tabular}
-\end{table}
+\textbf{Inference (Elbow and Silhouette Curves):}
+The Elbow curve displays a visible reduction in the rate of inertia drop after $k=2$ and $k=6$. The Silhouette score peaks at $k=2$ ($0.3815$) representing the dominant distinction between active movement and stillness, while stabilizing at $k=6$ ($0.1198$), justifying $k=6$ as the operational cluster partition.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\linewidth]{Ex8/Dendrogram.eps}
-\caption{Hierarchical Clustering Dendrogram (Ward's Linkage)}
+\includegraphics[width=0.88\linewidth]{Dendrogram.eps}
+\caption{Hierarchical Agglomerative Dendrogram (Ward's Linkage).}
 \label{fig:dendro}
 \end{figure}
 
-\subsection{Comparative Cluster Visualizations and Final Evaluation}
-Figure~\ref{fig:clusters} compares the 2D cluster projections (PCA subspace) alongside ground-truth activities. Table~\ref{tab:final} and Figure~\ref{fig:comp} provide the comparative internal and external validation scores.
+\textbf{Inference:}
+The dendrogram reveals two major branches at the top hierarchy corresponding exactly to dynamic kinetic activities versus static postures. The subsequent subordinate splits progressively resolve walking variations and sitting/standing postures.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\linewidth]{Ex8/Cluster_Scatter.eps}
-\caption{2D PCA Visualizations: Ground Truth vs K-Means, DBSCAN, and HAC}
-\label{fig:clusters}
+\includegraphics[width=0.85\linewidth]{Clustering_Comparison.eps}
+\caption{Clustering Quality Validation Comparison Across Algorithms.}
+\label{fig:comp_bar}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\caption{Final Clustering Performance Comparison across Algorithms}
-\label{tab:final}
-\begin{tabular}{|l|c|c|c|c|c|}
-\hline
-\textbf{Algorithm} & \textbf{Silhouette} & \textbf{Davies-Bouldin} & \textbf{Calinski-H.} & \textbf{ARI} & \textbf{NMI} \\ \hline
-    K-Means (k=6) & 0.1198 & 2.317 & 741.37 & 0.4034 & 0.5582 \\ \hline
-    DBSCAN & 0.3333 & 1.4767 & 737.52 & 0.284 & 0.4306 \\ \hline
-    Hierarchical (Ward) & 0.1279 & 2.6018 & 705.32 & 0.2913 & 0.4614 \\ \hline
-\end{tabular}
-\end{table}
+\textbf{Inference:}
+K-Means achieves the highest external label concordance ($\text{ARI} = 0.4034$, $\text{NMI} = 0.5582$), demonstrating that inertial features are well-approximated by centroid-based spherical partitioning. DBSCAN scores higher on density-based internal silhouette but groups overlapping postural classes into a unified density cluster.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\linewidth]{Ex8/Clustering_Comparison.eps}
-\caption{Performance Comparison Bar Plot Across Clustering Algorithms}
-\label{fig:comp}
-\end{figure}
-
-\section{Answers to Observation Questions}
-\begin{enumerate}[leftmargin=*]
+\section{Discussion}
+\subsection{Answers to Faculty Observation Questions}
+\begin{enumerate}
     \item \textbf{Which algorithm produced the most meaningful clusters? Why?} \\
-    \textbf{Answer:} \textbf{K-Means ($k=6$)} produced the most semantically meaningful clusters, achieving the highest external alignment metrics ($\text{ARI} = 0.4034$, $\text{NMI} = 0.5582$, and $\text{Calinski-Harabasz} = 741.37$). It successfully separated dynamic kinetic activities (walking, walking upstairs, downstairs) from static postural states (sitting, standing, laying).
-
+    \textbf{K-Means ($k=6$)} produced the most meaningful clusters, obtaining the highest external ground-truth metrics ($\text{ARI} = 0.4034$, $\text{NMI} = 0.5582$, and $\text{Calinski-Harabasz} = 741.37$). It successfully resolved cyclic accelerations into distinct walking subclasses.
     \item \textbf{How sensitive was K-Means to the choice of $k$?} \\
-    \textbf{Answer:} Highly sensitive. At $k=2$, the Silhouette score peaks ($0.3815$) by cleanly splitting dynamic movements from stationary postures. Moving towards $k=6$, inertia drops significantly from $963,418$ down to $751,980$, but boundaries between postural activities (sitting vs standing) exhibit overlapping feature densities.
-
+    Highly sensitive. At $k=2$, Silhouette peaks ($0.3815$) by splitting dynamic movements from postures. Increasing $k$ to 6 lowers WCSS by 22\%, but forces boundaries across overlapping postural densities.
     \item \textbf{Did DBSCAN detect noise or small clusters effectively?} \\
-    \textbf{Answer:} Yes. In high-dimensional spaces ($561$ dimensions), DBSCAN suffers from the curse of dimensionality where Euclidean distances become uniform. However, tuned with $\epsilon=15.0$ and $minPts=15$, it effectively filtered outlier transitions ($34.57\%$ noise), capturing dense core movement profiles.
-
-    \item \textbf{How does linkage choice (single/complete/ward) affect hierarchical clustering?} \\
-    \textbf{Answer:} Ward's linkage proved optimal for clustering accuracy by minimizing within-cluster variance ($\text{CH} = 705.32$, $\text{ARI} = 0.2913$). In contrast, Single linkage suffered from chaining artifacts (merging outliers into one giant cluster with artificially high silhouette but near-zero Calinski-Harabasz of $11.81$).
-
-    \item \textbf{Which internal metric best matched your visual intuition of cluster quality?} \\
-    \textbf{Answer:} The \textbf{Calinski-Harabasz Index} and \textbf{Davies-Bouldin Index} best matched visual intuition on 2D PCA plots. While silhouette scores favor elongated densities, Calinski-Harabasz rewards well-separated, compact spherical clusters corresponding to distinct kinetic behaviors.
+    Yes. In 561-dimensional sensor space, Euclidean distances concentrate. At $\epsilon=15.0, minPts=15$, DBSCAN effectively filtered transition outliers (34.57\% noise) while capturing dense steady-state movement cores.
+    \item \textbf{How does linkage choice affect hierarchical clustering?} \\
+    Ward's linkage was optimal ($\text{CH} = 705.32, \text{ARI} = 0.2913$) by minimizing variance inflation. In contrast, Single linkage suffered from severe chaining, merging outliers into an uninformative single cluster.
+    \item \textbf{Which internal metric best matched visual intuition?} \\
+    The \textbf{Calinski-Harabasz Index} and \textbf{Davies-Bouldin Index} best matched visual cluster compactivity on 2D projections, accurately favoring compact, distinct kinetic spheres over irregular density bands.
 \end{enumerate}
 
 \section{Conclusion}
-We successfully implemented and benchmarked K-Means, DBSCAN, and Hierarchical Agglomerative Clustering on the Human Activity Recognition dataset. The experiments validate that sensor-based activity spaces possess natural geometric clusters reflecting physical movements. K-Means with $k=6$ and Ward's HAC yielded the most accurate groupings aligning with ground-truth labels.
+Experiment 8 demonstrated unsupervised pattern discovery on complex human activity sensor streams. K-Means ($k=6$) and Ward's HAC successfully grouped physical activities aligning with ground-truth kinematics, while DBSCAN provided robust noise filtering against body transition artifacts.
+
+\section*{References}
+\begin{enumerate}[noitemsep]
+    \item D. Anguita et al., ``A public domain dataset for human activity recognition using smartphones,'' \textit{ESANN}, 2013.
+    \item P. J. Rousseeuw, ``Silhouettes: a graphical aid to the interpretation and validation of cluster analysis,'' \textit{J. Comput. Appl. Math.}, vol. 20, pp. 53--65, 1987.
+    \item M. Ester et al., ``A density-based algorithm for discovering clusters in large spatial databases with noise,'' \textit{KDD}, vol. 96, pp. 226--231, 1996.
+\end{enumerate}
+
 \end{document}
+
