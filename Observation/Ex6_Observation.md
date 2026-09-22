@@ -42,3 +42,8 @@ To understand and implement ensemble learning strategies including Bagging, Boos
 
 **Result:**
 The ensemble learning strategies were successfully implemented. The models achieved over 96% accuracy with Stacked Ensemble and AdaBoost demonstrating robust cross-validated F1 scores.
+
+**Learning Outcomes:**
+* Understood the theoretical variance-reduction mechanics of Bagging versus sequential bias-reduction in Boosting (AdaBoost, Gradient Boosting).
+* Learned how Stacking leverages a meta-learner (Logistic Regression) to find optimal convex combinations of heterogeneous base models.
+* Evaluated ensemble performance tradeoffs, recognizing AdaBoost's sensitivity to outliers and Stacking's robustness across cross-validation folds.

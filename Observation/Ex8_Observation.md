@@ -64,3 +64,10 @@ To implement and analyze the performance of clustering algorithms (K-Means, DBSC
 
 ### Result:
 The clustering algorithms were successfully implemented and evaluated on the Human Activity Recognition dataset. K-Means demonstrated superior correspondence with ground-truth labels ($\text{NMI} = 0.5582$), while DBSCAN effectively identified transitional noise points.
+
+---
+
+### Learning Outcomes:
+* Learned to determine optimal cluster count $k$ using the Elbow method (Within-Cluster Sum of Squares / inertia) and Silhouette analysis on high-dimensional sensory data.
+* Understood the curse of dimensionality and distance concentration in 561-dimensional feature spaces, and how density-based clustering (DBSCAN) isolates transitional movement noise from core activity clusters.
+* Evaluated hierarchical agglomerative clustering linkage criteria, recognizing how Ward’s minimum variance linkage forms balanced clusters and prevents the chaining phenomenon seen in Single linkage.

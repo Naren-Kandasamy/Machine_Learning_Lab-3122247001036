@@ -103,3 +103,10 @@ To study the effect of dimensionality reduction using Principal Component Analys
 
 ### Result:
 PCA dimensionality reduction was successfully evaluated across 10 classifiers on 6 benchmark datasets. Linear and maximum-margin models (SVM, Logistic Regression) and Stacking Ensembles proved most robust under PCA compression, while axis-aligned Decision Trees experienced severe degradation under coordinate rotation.
+
+---
+
+### Learning Outcomes:
+* Learned to compute covariance eigen-decomposition and apply the 95% cumulative explained variance threshold to compress high-dimensional feature spaces.
+* Understood the geometric impact of PCA coordinate rotation: linear models (SVM, Logistic Regression) benefit from orthogonal alignment, whereas axis-aligned Decision Trees suffer performance degradation.
+* Mastered statistical hypothesis testing for model comparison: applied Paired $t$-tests and Wilcoxon Signed-Rank tests for pairwise evaluation, and the Friedman Omnibus test for multi-algorithm benchmark ranking without Type I error inflation.

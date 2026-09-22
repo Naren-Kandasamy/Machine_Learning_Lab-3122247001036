@@ -50,3 +50,10 @@ To implement and empirically compare the classification performance of a Single-
 
 ### Result:
 The A/B experiment demonstrated that the Single-Layer Perceptron is fundamentally limited by linear separability, whereas the Multilayer Perceptron with backpropagation, ReLU activations, and Adam optimization successfully captured non-linear character patterns, achieving over $3\times$ higher classification accuracy.
+
+---
+
+### Learning Outcomes:
+* Implemented Rosenblatt's Perceptron Learning Algorithm from scratch and understood the theoretical limitations of linear separability (Minsky-Papert theorem) on multi-class character glyphs.
+* Learned how Multilayer Perceptrons circumvent linear boundaries by projecting inputs through non-linear hidden layers (ReLU) trained with backpropagation.
+* Evaluated neural network optimization dynamics, analyzing why Adam with adaptive learning rates converges substantially faster than vanilla SGD and how depth affects model capacity and overfitting.
